@@ -1,0 +1,1 @@
+// Always constant global variables here

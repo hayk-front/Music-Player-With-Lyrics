@@ -1,0 +1,1 @@
+// Global Pure Functions Here
