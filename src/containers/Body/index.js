@@ -1,15 +1,15 @@
 import React from "react";
 import Screen from "./Screen";
-import Sidebar from "./Sidebar";
 import * as Styled from "./styled";
-import SubtitleListSidebar from "./SubtitleListSidebar";
+import Sidebar from "./Sidebar";
+import EmptySidebar from "./EmptySidebar";
 
 export const Body = () => {
   return (
     <Styled.Body>
-      <Sidebar />
+      <EmptySidebar />
       <Screen />
-      <SubtitleListSidebar />
+      <Sidebar />
     </Styled.Body>
   );
 };

@@ -27,6 +27,8 @@ const AudioChunk = React.memo((props) => {
   }, [chunk, setActiveChunkRef]);
 
   return (
+    // TODO: get START and END seconds, and change position
+    
     <Styled.Chunk width={sizeInPercent} ref={chunk}>
       <Edge side={"left"} />
       <Edge side={"right"} />

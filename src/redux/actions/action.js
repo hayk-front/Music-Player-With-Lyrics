@@ -22,4 +22,21 @@ export const editChunk = (payload) => {
     payload,
   };
 };
-
+export const editChunkText = (payload) => {
+  return {
+    type: "EDIT_CHUNK_TEXT",
+    payload,
+  };
+};
+export const setActiveChunkStartPoint = (payload) => {
+  return {
+    type: "EDIT_CHUNK_START_TIME",
+    payload,
+  };
+};
+export const setActiveChunkEndPoint = (payload) => {
+  return {
+    type: "EDIT_CHUNK_END_TIME",
+    payload,
+  };
+};

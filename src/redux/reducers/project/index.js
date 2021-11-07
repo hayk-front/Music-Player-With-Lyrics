@@ -1,5 +1,13 @@
 import { produce } from "immer";
-import { setDuration, addChunk, editChunk, setActiveChunk } from "./producer";
+import {
+  setDuration,
+  addChunk,
+  editChunk,
+  setActiveChunk,
+  editText,
+  editStartTime,
+  editEndTime,
+} from "./producer";
 
 const initialState = {
   audioUrl: "https://soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
@@ -11,9 +19,18 @@ const initialState = {
     {
       id: 1,
       start: 5,
-      end: 65,
+      end: 40,
       textParams: {
-        text: "Lorem Ipsum",
+        text: "First Text",
+        coordinates: [120, 190],
+      },
+    },
+    {
+      id: 2,
+      start: 60,
+      end: 110,
+      textParams: {
+        text: "Second Text",
         coordinates: [120, 190],
       },
     },
@@ -34,6 +51,16 @@ export const project = (state = initialState, action) => {
         break;
       case "EDIT_AUDIO_CHUNK":
         editChunk(action)(state, draft);
+        break;
+        case "EDIT_CHUNK_START_TIME":
+        editStartTime(action)(state, draft);
+        break;
+        case "EDIT_CHUNK_END_TIME":
+        editEndTime(action)(state, draft);
+        break;
+      case "EDIT_CHUNK_TEXT":
+        console.log('ZzZzZzZzZzZzZzZzZzZzZzZ')
+        editText(action)(state, draft);
         break;
       default:
         break;

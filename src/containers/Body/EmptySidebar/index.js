@@ -1,9 +1,9 @@
 import React from "react";
 import * as Styled from "./styled";
 
-const SubtitleListSidebar = () => {
+const EmptySidebar = () => {
 
   return <Styled.Sidebar></Styled.Sidebar>;
 };
 
-export default SubtitleListSidebar;
+export default EmptySidebar;

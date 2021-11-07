@@ -23,3 +23,18 @@ export const getActiveChunk = createSelector(
     return audioChunks.find((chunk) => chunk.id === project.activeChunkId);
   }
 );
+
+export const getActiveChunkText = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.textParams.text
+);
+
+export const getActiveChunkStartPoint = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.start
+);
+
+export const getActiveChunkEndPoint = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.end
+);

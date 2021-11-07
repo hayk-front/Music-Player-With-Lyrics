@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const Sidebar = styled.div`
-  width: 30%;
+  width: 15%;
   padding: 1% 2%;
+  border-right: 2px solid #e7e7e7;
   background-color: #fff;
-  border-left: 2px solid #E7E7E7;
 `;
