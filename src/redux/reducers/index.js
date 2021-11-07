@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
-
-import { project } from "./player";
+import { project } from "./project";
 
 const rootReducer = combineReducers({
   project,

@@ -1,38 +1,44 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import { getElementWidthOnWindow } from "../../../../helpers";
 import * as Styled from "./styled";
 
 export const ProgressBar = (props) => {
-  const { audio } = props;
+  const { audio, progressStatus } = props;
   const progress = useRef(null);
   const progressBar = useRef(null);
-  const [x, setX] = useState(0);
-  const [progressPercent, setProgress] = useState(0);
 
-  const calculateDistance = (event) => {
-    setX(event.clientX);
+  const CalculateProgressPercent = (event) => {
+    const Xcoordinate = event.clientX;
+    const { elementStart, elementWidth } = getElementWidthOnWindow(
+      progressBar.current,
+      Xcoordinate
+    );
+    const progressPercent = Math.abs(
+      Math.round((elementStart / elementWidth) * 100)
+    );
+    setProgressBarPercent(progressPercent);
   };
 
-  const getProgressPercent = (elem, mouseX) => {
-    const progressBarStart = mouseX - elem.offsetLeft;
-    const progressBarWidth = window.innerWidth - 2 * elem.offsetLeft;
-    return Math.abs(Math.round((progressBarStart / progressBarWidth) * 100));
+  const setProgressBarPercent = (percent) => {
+    progress.current.style.width = percent + "%";
+    setAudioCurrentTime(percent);
+  };
+
+  const setAudioCurrentTime = (percent) => {
+    audio.currentTime = Math.round(
+      (Math.floor(audio.duration) * percent) / 100
+    );
   };
 
   useEffect(() => {
-    setProgress(getProgressPercent(progressBar.current, x));
-    progress.current.style.width = progressPercent + "%";
-  }, [x, progress, progressPercent, getProgressPercent]);
-
-  useEffect(() => {
-    if (audio && audio.duration) {
-      audio.currentTime = Math.round(
-        (Math.floor(audio.duration) * progressPercent) / 100
-      );
-    }
-  }, [audio, progressPercent]);
+    progress.current.style.width = `${progressStatus}%`;
+  }, [progress, progressStatus]);
 
   return (
-    <Styled.ProgressBar ref={progressBar} onMouseDown={calculateDistance}>
+    <Styled.ProgressBar
+      ref={progressBar}
+      onMouseDown={CalculateProgressPercent}
+    >
       <Styled.ProgressStatus ref={progress} />
     </Styled.ProgressBar>
   );

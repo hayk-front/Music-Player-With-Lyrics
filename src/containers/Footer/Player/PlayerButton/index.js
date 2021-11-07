@@ -3,22 +3,22 @@ import * as Styled from "./styled";
 
 export const PlayerButton = (props) => {
   const { audio } = props;
-  const [playing, setPlayerStatus] = useState(false);
+  const [paused, setPaused] = useState(true);
 
   const isPlaying = () => {
-    if(!playing){
-        setPlayerStatus(true);
-        audio.play()
-    } else{
-        setPlayerStatus(false)
-        audio.pause()
+    if (audio.paused) {
+      audio.play();
+      setPaused(false);
+    } else {
+      audio.pause();
+      setPaused(true);
     }
   };
 
   return (
     <Styled.Button
       onClick={() => isPlaying()}
-      playing={playing}
+      paused={paused}
     ></Styled.Button>
   );
 };

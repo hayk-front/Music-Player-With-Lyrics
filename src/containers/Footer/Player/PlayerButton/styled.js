@@ -7,6 +7,6 @@ export const Button = styled.div`
   height: 25px;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: ${(props) =>
-    props.playing ? `url("./icons/pause.svg")` : `url("./icons/play.svg")`};
+  background-image: url(${(props) =>
+    props.paused ? "./icons/play.svg" : "./icons/pause.svg"});
 `;
