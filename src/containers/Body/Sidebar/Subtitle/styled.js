@@ -6,11 +6,12 @@ export const Subtitle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto 4%;
+  margin: 0 auto 5%;
   padding: 7% 2% 3%;
   border-radius: 10px;
   font-weight: 600;
   font-family: monospace;
+  border: 1px solid #e7e7e7;
   background-color: #fff;
   box-shadow: 0 5px 8px hsl(0 0% 0% / 20%);
 `;

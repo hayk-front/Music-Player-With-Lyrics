@@ -1,35 +1,14 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import { editChunkText } from "../../../../../redux/actions/action";
-import { getActiveChunkText } from "../../../../../redux/selectors";
+import React from "react";
 import * as Styled from "./styled";
 
-const TextInput = (props) => {
-  const [inputValue, setValue] = useState(props.text);
-  const [timer, setTimer] = useState(null);
-
-  const updateText = (e) => {
-    setValue(e.target.value)
-    clearTimeout(timer);
-    setTimer(
-      setTimeout(() => {
-        editChunkText(e.target.value);
-      }, 1500)
-    );
-  };
+export const TextInput = (props) => {
+  const { text, updateText } = props;
 
   return (
     <Styled.Label>
-      <Styled.Input
-        value={inputValue}
-        onChange={updateText}
-      ></Styled.Input>
+      <Styled.Input value={text} onChange={updateText}></Styled.Input>
     </Styled.Label>
   );
 };
 
-const mapStateToProps = (state) => ({
-  text: getActiveChunkText(state)
-})
 
-export default connect(mapStateToProps, { editChunkText })(TextInput);

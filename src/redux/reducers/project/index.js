@@ -2,7 +2,7 @@ import { produce } from "immer";
 import {
   setDuration,
   addChunk,
-  editChunk,
+  removeChunk,
   setActiveChunk,
   editText,
   editStartTime,
@@ -19,18 +19,18 @@ const initialState = {
     {
       id: 1,
       start: 5,
-      end: 40,
+      end: 25,
       textParams: {
-        text: "First Text",
+        text: "Some Text",
         coordinates: [120, 190],
       },
     },
     {
       id: 2,
-      start: 60,
-      end: 110,
+      start: 80,
+      end: 140,
       textParams: {
-        text: "Second Text",
+        text: "Some Text",
         coordinates: [120, 190],
       },
     },
@@ -47,19 +47,18 @@ export const project = (state = initialState, action) => {
         setActiveChunk(action)(state, draft);
         break;
       case "ADD_AUDIO_CHUNK":
-        addChunk(action)(state, draft);
+        addChunk()(state, draft);
         break;
-      case "EDIT_AUDIO_CHUNK":
-        editChunk(action)(state, draft);
+      case "REMOVE_AUDIO_CHUNK":
+        removeChunk(action)(state, draft);
         break;
-        case "EDIT_CHUNK_START_TIME":
+      case "EDIT_CHUNK_START_TIME":
         editStartTime(action)(state, draft);
         break;
-        case "EDIT_CHUNK_END_TIME":
+      case "EDIT_CHUNK_END_TIME":
         editEndTime(action)(state, draft);
         break;
       case "EDIT_CHUNK_TEXT":
-        console.log('ZzZzZzZzZzZzZzZzZzZzZzZ')
         editText(action)(state, draft);
         break;
       default:

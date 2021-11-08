@@ -1,56 +1,51 @@
-import { getActiveChunk } from "../../selectors";
+import {
+  getActiveChunk,
+  getLastAudioChunk,
+  isAllowedToAddChunk,
+} from "./helper";
 
 export const setDuration = (action) => (state, draft) => {
-  console.log("STATE: ", state);
-  console.log("DRAFT: ", draft);
-
-  draft.data = action.value;
+  draft.duration = action.payload;
 };
 
 export const setActiveChunk = (action) => (state, draft) => {
-  console.log("STATE: ", state);
-  console.log("DRAFT: ", draft);
-
-  draft.data = action.value;
+  draft.activeChunkId = action.payload;
 };
 
-export const addChunk = (action) => (state, draft) => {
-  console.log("STATE: ", state);
-  console.log("DRAFT: ", draft);
-
-  draft.data = action.value;
+export const addChunk = () => (state, draft) => {
+  const lastChunk = getLastAudioChunk(draft.audioChunks);
+  if (isAllowedToAddChunk(lastChunk, draft.duration)) {
+    draft.audioChunks.push({
+      id: lastChunk.id + 1,
+      start: lastChunk.end + 1,
+      end: lastChunk.end + 6,
+      textParams: {
+        text: "Some Text Here",
+        coordinates: [120, 190],
+      },
+    });
+  }
 };
 
-export const editChunk = (action) => (state, draft) => {
-  console.log("STATE: ", state);
-  console.log("DRAFT: ", draft);
-
-  draft.data = action.value;
+export const removeChunk = (action) => (state, draft) => {
+  const removableIndex = draft.audioChunks.findIndex(
+    (chunk) => chunk.id === action.payload
+  );
+  draft.audioChunks.splice(removableIndex, 1);
 };
 
-export const editText = (action) => (state,draft) => {
-  console.log('editText: ', action)
-  draft.data = action.value;
+export const editText = (action) => (state, draft) => {
+  const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
+  activeChunk.textParams.text = action.payload;
+};
 
-  const activeChunk = getActiveChunk(state);
-  activeChunk.textParams.text = draft.data
-}
+export const editStartTime = (action) => (state, draft) => {
+  const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
+  activeChunk.start = action.payload;
+};
 
-export const editStartTime = (action) => (state,draft) => {
-  console.log('startTime: ', action)
-  draft.data = action.value;
-
-  const activeChunk = getActiveChunk(state);
-  activeChunk.start = draft.data
-}
-
-export const editEndTime = (action) => (state,draft) => {
-  console.log('endTime: ', action)
-  draft.data = action.value;
-
-  const activeChunk = getActiveChunk(state);
-  activeChunk.end = draft.data
-}
-
-
-
+export const editEndTime = (action) => (state, draft) => {
+  console.log('action: ', action);
+  const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
+  activeChunk.start = action.payload;
+};

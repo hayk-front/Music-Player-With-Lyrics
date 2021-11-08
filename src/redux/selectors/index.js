@@ -1,24 +1,25 @@
 import { createSelector } from "reselect";
 
-export const getState = (state) => state.project;
+// PROJECT
+export const getProject = (state) => state.project;
 
 export const getAudioUrl = createSelector(
-  getState,
+  getProject,
   (project) => project.audioUrl
 );
 
 export const getAudioDuration = createSelector(
-  getState,
+  getProject,
   (project) => project.duration
 );
 
 export const getAudioChunks = createSelector(
-  getState,
+  getProject,
   (project) => project.audioChunks
 );
 
 export const getActiveChunk = createSelector(
-  [getState, getAudioChunks],
+  [getProject, getAudioChunks],
   (project, audioChunks) => {
     return audioChunks.find((chunk) => chunk.id === project.activeChunkId);
   }
@@ -38,3 +39,35 @@ export const getActiveChunkEndPoint = createSelector(
   getActiveChunk,
   (audioChunk) => audioChunk.end
 );
+
+// _______________________________________________________
+// GLOBALS
+export const getGlobals = (state) => {
+  return state.globals
+};
+
+export const getIsResizable = createSelector(
+  getGlobals,
+  (globals) => globals.isResizable
+);
+
+export const getWidthInPercent = createSelector(
+  getGlobals,
+  (globals) => globals.widthInPercent
+);
+
+export const getWidthInPixels = createSelector(
+  getGlobals,
+  (globals) => globals.widthInPixels
+);
+
+export const getChunksActiveEdge = createSelector(
+  getGlobals,
+  (globals) => globals.chunksActiveEdge
+);
+
+export const getActiveChunkRef = createSelector(
+  getGlobals,
+  (globals) => globals.activeChunkRef
+);
+

@@ -6,6 +6,7 @@ import * as Styled from "./styled";
 
 const Timeline = React.memo((props) => {
   const { audioChunks } = props;
+  
   return (
     <Styled.Timeline>
       {audioChunks.map((audioChunk) => {

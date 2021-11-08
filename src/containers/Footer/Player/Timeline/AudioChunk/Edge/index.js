@@ -1,49 +1,72 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { percentToPixel, pixelToPercent } from "../../../../../../helpers";
-import { AudioChunkContext } from "../../../../../../context/AudioChunkContext";
 import { useEventListener } from "../../../../../../custom-hooks/useEventListener";
 import * as Styled from "./styled";
+import {
+  setActiveChunkEndPoint,
+  setActiveChunkId,
+  setChunksActiveEdge,
+  setIsResizable,
+  setWidthInPercent,
+  setWidthInPixels,
+} from "../../../../../../redux/actions/action";
+import { connect } from "react-redux";
+import {
+  getChunksActiveEdge,
+  getIsResizable,
+  getWidthInPercent,
+  getWidthInPixels,
+} from "../../../../../../redux/selectors";
 
 const Edge = React.memo((props) => {
-  const { side } = props;
   const {
-    setPercentSize,
+    audioChunk,
+    side,
+    startPercent,
     isResizable,
-    setIsResizable,
-    activeEdge,
-    setActiveEdge,
-    sizeInPixels,
-    setPixelSize,
+    widthInPercent,
+    widthInPixels,
     activeChunkRef,
-  } = useContext(AudioChunkContext);
-
+    chunksActiveEdge,
+    setActiveChunkEndPoint,
+    setActiveChunkId,
+    setWidthInPixels,
+    setWidthInPercent,
+    setIsResizable,
+    setChunksActiveEdge
+  } = props;
+  const [timer, setTimer] = useState(null)
   const edge = useRef(null);
   const minWidth = 50;
 
   useEffect(() => {
     const currentRef = edge.current;
-    if (currentRef) setActiveEdge(currentRef);
-  }, [edge, setActiveEdge]);
+    if (currentRef) setChunksActiveEdge(currentRef);
+  }, [edge, setChunksActiveEdge]);
 
   useEffect(() => {
-    if(activeChunkRef)
-    setPixelSize(percentToPixel(activeChunkRef));
-  }, [activeChunkRef, setPixelSize]);
+    if (activeChunkRef) setWidthInPixels(percentToPixel(activeChunkRef));
+  }, [activeChunkRef, setWidthInPixels]);
 
   const resizeStart = () => {
+    setActiveChunkId(audioChunk.id);
     setIsResizable(true);
   };
 
   const resizeMove = (e) => {
     if (isResizable) {
+      clearTimeout(timer);
       e.stopPropagation();
-      const pixels = sizeInPixels + e.movementX;
+      const pixels = widthInPixels + e.movementX;
       if (pixels < minWidth) {
-        setPixelSize(minWidth);
+        setWidthInPixels(minWidth);
       } else {
-        setPixelSize(pixels);
+        setWidthInPixels(pixels);
       }
-      setPercentSize(pixelToPercent(window.innerWidth, sizeInPixels));
+      setWidthInPercent(pixelToPercent(window.innerWidth, widthInPixels));
+      const endPercent = widthInPercent + startPercent;
+      console.log("START: ", startPercent, "END: ", endPercent);
+      setTimer(setTimeout(() => setActiveChunkEndPoint(endPercent), 500));
     }
   };
 
@@ -51,7 +74,7 @@ const Edge = React.memo((props) => {
     setIsResizable(false);
   };
 
-  useEventListener("mousedown", resizeStart, activeEdge);
+  useEventListener("mousedown", resizeStart, chunksActiveEdge);
   useEventListener("mousemove", resizeMove);
   useEventListener("mouseup", () => {
     if (isResizable) resizeFinish();
@@ -60,4 +83,18 @@ const Edge = React.memo((props) => {
   return <Styled.Edge side={side} onMouseDown={resizeStart}></Styled.Edge>;
 });
 
-export default Edge;
+const mapStateToProps = (state) => ({
+  isResizable: getIsResizable(state),
+  widthInPercent: getWidthInPercent(state),
+  widthInPixels: getWidthInPixels(state),
+  chunksActiveEdge: getChunksActiveEdge(state),
+});
+
+export default connect(mapStateToProps, {
+  setActiveChunkEndPoint,
+  setActiveChunkId,
+  setChunksActiveEdge,
+  setWidthInPixels,
+  setWidthInPercent,
+  setIsResizable,
+})(Edge);
