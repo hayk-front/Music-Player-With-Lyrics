@@ -21,8 +21,16 @@ export const calculatePercentBySecond = (second, duration) => {
   return Math.round((second * 100) / duration);
 };
 
+export const calculateProgressPercent = (elementStart, elementWidth) => {
+  return Math.abs(Math.round((elementStart / elementWidth) * 100));
+};
+
 export const caluclateSecondByPercent = (percent, duration) => {
   return Math.round((percent * duration) / 100);
+};
+
+export const percentToSecond = (duration, percent) => {
+  return Math.round((Math.floor(duration) * percent) / 100);
 };
 
 export const parseSecondsToMinutesFormat = (seconds) => {

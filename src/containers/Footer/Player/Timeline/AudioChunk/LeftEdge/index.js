@@ -32,6 +32,7 @@ const LeftEdge = React.memo((props) => {
   const [isResizable, setIsResizable] = useState(false);
 
   const resizeToLeft = (e) => {
+    // TODO: to right check Xsize and dont make bigger, to left: make chunk bigger
     const Xsize = e.clientX - timelineRef.current.offsetLeft;
     chunkRef.current.style.left = Xsize + "px";
     chunkRef.current.style.width = chunkRef.current.style.width + Xsize + "px";

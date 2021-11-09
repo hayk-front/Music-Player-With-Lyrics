@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 export const useRefHook = (intialRef) => {
   const [ref, setRef] = useState(null);
 
@@ -5,5 +6,5 @@ export const useRefHook = (intialRef) => {
     setRef(intialRef);
   }, [intialRef, setRef]);
 
-  return {ref}
-}
+  return { ref };
+};

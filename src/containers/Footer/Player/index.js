@@ -12,7 +12,7 @@ const timeToPercent = (time, duration) => (time / duration) * 100
 
 const Player = React.memo((props) => {
   const { audioUrl } = props;
-  const [progressStatus, setProgressStatus] = useState(0);
+  const [progressPercent, setProgressStatus] = useState(0);
   const audioElement = useRef(null);
   
   const {audioPlayer} = useRefHook(audioElement.current)
@@ -31,7 +31,7 @@ const Player = React.memo((props) => {
       />
       <div className="G-flex G-flex-column G-align-center">
         <PlayerButton audio={audioPlayer} />
-        <ProgressBar audio={audioPlayer} progressStatus={progressStatus} />
+        <ProgressBar audio={audioPlayer} progressPercent={progressPercent} />
         <Timeline />
       </div>
     </Styled.Player>

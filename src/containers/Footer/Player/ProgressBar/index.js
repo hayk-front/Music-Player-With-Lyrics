@@ -1,52 +1,45 @@
 import React, { useRef, useEffect } from "react";
-import { getElementWidthOnWindow } from "../../../../helpers";
+import { getElementWidthOnWindow, percentToSecond } from "../../../../helpers";
+import { setProgressPercent } from "./helper";
 import * as Styled from "./styled";
 
 export const ProgressBar = (props) => {
-  const { audio, progressStatus } = props;
+  const { audio, progressPercent } = props;
   const progress = useRef(null);
   const progressBar = useRef(null);
 
   const calculateProgressPercent = (event) => {
-    // rename 
-    const Xcoordinate = event.clientX;
+    const clickedProgressCoordinate = event.clientX;
     const { elementStart, elementWidth } = getElementWidthOnWindow(
       progressBar.current,
-      Xcoordinate
+      clickedProgressCoordinate
     );
-    // helper
-    const progressPercent = Math.abs(
-      Math.round((elementStart / elementWidth) * 100)
+    const progressPercent = calculateProgressPercent(
+      elementStart,
+      elementWidth
     );
     setProgressBarPercent(progressPercent);
   };
 
   const setProgressBarPercent = (percent) => {
-    // helper function
-    // setZrt(progress, progressStatus)
-    progress.current.style.width = percent + "%";
+    setProgressPercent(progress, percent);
     setAudioCurrentTime(percent);
   };
 
   const setAudioCurrentTime = (percent) => {
-    // TODO percentToSecond
-    audio.currentTime = Math.round(
-      (Math.floor(audio.duration) * percent) / 100
-    );
+    audio.currentTime = percentToSecond(audio.duration, percent);
   };
 
   useEffect(() => {
-    // TODO rename
-    // setZrt(progress, progressStatus)
-    progress.current.style.width = `${progressStatus}%`;
-  }, [progress, progressStatus]);
+    setProgressPercent(progress, progressPercent);
+  }, [progress, progressPercent, setProgressPercent]);
 
   return (
     <Styled.ProgressBar
       ref={progressBar}
       onMouseDown={calculateProgressPercent}
     >
-      <Styled.ProgressStatus ref={progress} />
+      <Styled.ProgressPercent ref={progress} />
     </Styled.ProgressBar>
   );
 };

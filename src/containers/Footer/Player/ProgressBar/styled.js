@@ -10,7 +10,7 @@ export const ProgressBar = styled.div`
   background-color: #dfebfe;
 `;
 
-export const ProgressStatus = styled.div`
+export const ProgressPercent = styled.div`
   position: absolute;
   width: 30%;
   height: 12px;
