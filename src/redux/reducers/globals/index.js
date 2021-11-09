@@ -1,6 +1,5 @@
 import { produce } from "immer";
 import {
-  setIsResizable,
   setWidthInPercent,
   setWidthInPixels,
   setChunksActiveEdge,
@@ -8,7 +7,6 @@ import {
 } from "./producer";
 
 const initialState = {
-  isResizable: false,
   widthInPercent: 0,
   widthInPixels: 0,
   chunksActiveEdge: null,
@@ -18,9 +16,6 @@ const initialState = {
 export const globals = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case "SET_IS_RESIZABLE":
-        setIsResizable(action)(state, draft);
-        break;
       case "SET_WIDTH_IN_PERCENT":
         setWidthInPercent(action)(state, draft);
         break;

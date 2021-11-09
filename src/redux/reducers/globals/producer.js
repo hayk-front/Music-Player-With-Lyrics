@@ -1,7 +1,3 @@
-export const setIsResizable = (action) => (state, draft) => {
-  draft.isResizable = action.payload;
-};
-
 export const setWidthInPercent = (action) => (state, draft) => {
   draft.widthInPercent = action.payload;
 };

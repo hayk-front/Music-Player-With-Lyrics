@@ -36,7 +36,6 @@ const Subtitle = (props) => {
   const [inputValue, setValue] = useState(audioChunk.textParams.text);
 
   useEffect(() => {
-    console.log("UPDATEEEEEEED ARAA !!!!!");
     setEndTime(parseSecondsToMinutesFormat(audioChunk.end))
   }, [audioChunk]);
 

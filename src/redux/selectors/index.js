@@ -30,6 +30,11 @@ export const getActiveChunkText = createSelector(
   (audioChunk) => audioChunk.textParams.text
 );
 
+export const getActiveChunkId = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.id
+);
+
 export const getActiveChunkStartPoint = createSelector(
   getActiveChunk,
   (audioChunk) => audioChunk.start
