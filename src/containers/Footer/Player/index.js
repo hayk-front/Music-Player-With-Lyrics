@@ -6,18 +6,20 @@ import { ProgressBar } from "./ProgressBar";
 import * as Styled from "./styled";
 import Timeline from "./Timeline";
 
+import {useRefHook} from '../../../custom-hooks'
+
+const timeToPercent = (time, duration) => (time / duration) * 100
+
 const Player = React.memo((props) => {
   const { audioUrl } = props;
-  const audioElement = useRef(null);
-  const [audioPlayer, setAudioElem] = useState(null);
   const [progressStatus, setProgressStatus] = useState(0);
-
-  useEffect(() => {
-    setAudioElem(audioElement.current);
-  }, [audioElement, setAudioElem]);
+  const audioElement = useRef(null);
+  
+  const {audioPlayer} = useRefHook(audioElement.current)
 
   const updateProgressBar = () => {
-    setProgressStatus((audioPlayer.currentTime / audioPlayer.duration) * 100);
+    const timePercent = timeToPercent(audioPlayer.currentTime, audioPlayer.duration)
+    setProgressStatus(timePercent);
   };
 
   return (
@@ -26,7 +28,7 @@ const Player = React.memo((props) => {
         ref={audioElement}
         src={audioUrl}
         onTimeUpdate={updateProgressBar}
-      ></audio>
+      />
       <div className="G-flex G-flex-column G-align-center">
         <PlayerButton audio={audioPlayer} />
         <ProgressBar audio={audioPlayer} progressStatus={progressStatus} />

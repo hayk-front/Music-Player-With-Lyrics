@@ -12,9 +12,7 @@ const Timeline = React.memo((props) => {
     <Styled.Timeline ref={timeline}>
       {audioChunks.map((audioChunk) => {
         return (
-          <Fragment key={audioChunk.id}>
-            <AudioChunk audioChunk={audioChunk} timeline={timeline} />
-          </Fragment>
+          <AudioChunk audioChunk={audioChunk} timeline={timeline} key={audioChunk.id} />
         );
       })}
     </Styled.Timeline>

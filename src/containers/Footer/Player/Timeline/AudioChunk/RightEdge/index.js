@@ -34,6 +34,8 @@ const RightEdge = React.memo((props) => {
     setActiveChunkId(audioChunk.id);
     setIsResizable(true);
   };
+
+  // not else
   const resizeMove = (e) => {
     if (isResizable) {
       if (chunkRef.current.clientWidth < minWidth) {
