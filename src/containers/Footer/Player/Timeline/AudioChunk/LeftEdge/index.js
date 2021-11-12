@@ -1,41 +1,64 @@
-import React, { useRef, useEffect, useState } from "react";
-import { pixelToPercent } from "../../../../../../helpers";
+import React, { useRef, useState, useEffect } from "react";
 import { useEventListener } from "../../../../../../custom-hooks/useEventListener";
 import * as Styled from "./styled";
 import {
-  setActiveChunkEndPoint,
-  setActiveChunkStartPoint,
+  setChunkStartTime,
   setActiveChunkId,
-  setWidthInPercent,
-  setWidthInPixels,
 } from "../../../../../../redux/actions/action";
 import { connect } from "react-redux";
 import {
-  getActiveChunkId,
-  getWidthInPercent,
-  getWidthInPixels,
+  getAudioDuration,
+  getLeftNeighbourChunk,
 } from "../../../../../../redux/selectors";
+import {
+  getChunkEdgeSeconds,
+  getChunkStartEndPercents,
+  getWidth,
+  isReachedLeftBarrier,
+  setWidth,
+} from "../helper";
+import { pixelToPercent, secondToPercent } from "../../../../../../helpers";
 
 const LeftEdge = React.memo((props) => {
   const {
-    left,
     audioChunk,
     chunkRef,
     timelineRef,
-    activeChunkId,
-    startPercent,
-    setActiveChunkStartPoint,
+    audioDuration,
+    setChunkStartTime,
     setActiveChunkId,
+    leftNeighbourChunk,
   } = props;
-  const minWidth = 50;
+  const minWidth = 40;
   const leftEdge = useRef(null);
   const [isResizable, setIsResizable] = useState(false);
+  const [neighbourEnd, setNeighbourEnd] = useState(0);
+  const timeline = timelineRef.current;
+  const chunk = chunkRef.current;
+  useEffect(() => {
+    if (leftNeighbourChunk) {
+      setNeighbourEnd(leftNeighbourChunk.end);
+    }
+  }, [leftNeighbourChunk]);
 
   const resizeToLeft = (e) => {
-    // TODO: to right check Xsize and dont make bigger, to left: make chunk bigger
-    const Xsize = e.clientX - timelineRef.current.offsetLeft;
-    chunkRef.current.style.left = Xsize + "px";
-    chunkRef.current.style.width = chunkRef.current.style.width + Xsize + "px";
+    const mouseMoveSize = e.clientX - timeline.offsetLeft;
+    let newWidth = getWidth(chunk);
+    const startEndPercents = getChunkStartEndPercents(
+      mouseMoveSize,
+      chunk,
+      timeline
+    );
+    const barrierEnd = secondToPercent(neighbourEnd, audioDuration);
+    if (!isReachedLeftBarrier(startEndPercents.start, barrierEnd)) {
+      newWidth -= e.movementX;
+      if (newWidth > minWidth) {
+        const leftInPercent = pixelToPercent(mouseMoveSize, getWidth(timeline));
+        chunk.style.left = `${leftInPercent}%`;
+      }
+      const widthInPercent = pixelToPercent(newWidth, getWidth(timeline));
+      setWidth(chunk, widthInPercent);
+    }
   };
 
   const resizeStart = () => {
@@ -45,8 +68,8 @@ const LeftEdge = React.memo((props) => {
 
   const resizeMove = (e) => {
     if (isResizable) {
-      if (chunkRef.current.clientWidth < minWidth) {
-        chunkRef.current.clientWidth = minWidth;
+      if (getWidth(chunk) < minWidth) {
+        chunk.style.width = minWidth;
       } else {
         resizeToLeft(e);
       }
@@ -55,12 +78,11 @@ const LeftEdge = React.memo((props) => {
 
   const resizeFinish = () => {
     setIsResizable(false);
-    // const startPercent =
-    //   pixelToPercent(window.innerWidth, endPercent - chunkRef.current.clientWidth);
-    // setActiveChunkStartPoint(startPercent);
+    const edgeSeconds = getChunkEdgeSeconds(chunk, timeline, audioDuration);
+    setChunkStartTime(edgeSeconds.startSecond);
   };
 
-  useEventListener("mousedown", resizeStart, leftEdge);
+  useEventListener("mousedown", resizeStart, leftEdge.current);
   useEventListener("mousemove", (e) => {
     if (isResizable) resizeMove(e);
   });
@@ -72,15 +94,11 @@ const LeftEdge = React.memo((props) => {
 });
 
 const mapStateToProps = (state) => ({
-  widthInPercent: getWidthInPercent(state),
-  widthInPixels: getWidthInPixels(state),
-  activeChunkId: getActiveChunkId(state),
+  audioDuration: getAudioDuration(state),
+  leftNeighbourChunk: getLeftNeighbourChunk(state),
 });
 
 export default connect(mapStateToProps, {
-  setActiveChunkEndPoint,
-  setActiveChunkStartPoint,
+  setChunkStartTime,
   setActiveChunkId,
-  setWidthInPixels,
-  setWidthInPercent,
 })(LeftEdge);

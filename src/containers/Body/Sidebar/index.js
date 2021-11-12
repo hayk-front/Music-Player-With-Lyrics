@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { getAudioChunks } from "../../../redux/selectors";
 import AddButton from "./AddButton";
@@ -7,13 +7,19 @@ import Subtitle from "./Subtitle";
 
 const Sidebar = (props) => {
   const { audioChunks } = props;
+  const sidebar = useRef(null);
+
+  useEffect(() => {
+    sidebar.current.scrollTo({
+      top: sidebar.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [audioChunks.length]);
 
   return (
-    <Styled.Sidebar>
+    <Styled.Sidebar ref={sidebar}>
       {audioChunks.map((audioChunk) => {
-        return (
-          <Subtitle audioChunk={audioChunk} key={audioChunk.id} />
-        );
+        return <Subtitle audioChunk={audioChunk} key={audioChunk.id} />;
       })}
       <AddButton />
     </Styled.Sidebar>

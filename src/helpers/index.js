@@ -1,6 +1,6 @@
 // Global Pure Functions Here
 
-export const getElementWidthOnWindow = (parent, clientX, childSize) => {
+export const getElementWidthOnWindow = (parent, clientX) => {
   const elementStart = clientX - parent.offsetLeft;
   const elementWidth = window.innerWidth - 2 * parent.offsetLeft;
   return {
@@ -9,8 +9,8 @@ export const getElementWidthOnWindow = (parent, clientX, childSize) => {
   };
 };
 
-export const pixelToPercent = (parent, child) => {
-  return Math.round((child * 100) / parent);
+export const pixelToPercent = (child, parent) => {
+  return (child * 100) / parent;
 };
 
 export const percentToPixel = (ref) => {
@@ -18,7 +18,11 @@ export const percentToPixel = (ref) => {
 };
 
 export const calculatePercentBySecond = (second, duration) => {
-  return Math.round((second * 100) / duration);
+  return (second * 100) / duration;
+};
+
+export const secondToPercent = (second, duration) => {
+  return (second * 100) / duration;
 };
 
 export const calculateProgressPercent = (elementStart, elementWidth) => {
@@ -30,7 +34,7 @@ export const caluclateSecondByPercent = (percent, duration) => {
 };
 
 export const percentToSecond = (duration, percent) => {
-  return Math.round((Math.floor(duration) * percent) / 100);
+  return Math.floor((Math.floor(duration) * percent) / 100);
 };
 
 export const parseSecondsToMinutesFormat = (seconds) => {

@@ -46,5 +46,5 @@ export const editStartTime = (action) => (state, draft) => {
 
 export const editEndTime = (action) => (state, draft) => {
   const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
-  activeChunk.start = action.payload;
+  activeChunk.end = action.payload;
 };

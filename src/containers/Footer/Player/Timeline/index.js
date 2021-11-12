@@ -1,4 +1,4 @@
-import React, { forwardRef, Fragment, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { getAudioChunks } from "../../../../redux/selectors";
 import AudioChunk from "./AudioChunk";

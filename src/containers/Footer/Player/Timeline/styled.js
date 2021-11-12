@@ -5,7 +5,8 @@ export const Timeline = styled.div`
   width: 98%;
   height: 60px;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 7px;
   margin: 4% auto 0;
-  background-color: #dfebfe;
+  background: linear-gradient(#C7D6EF, #E0EBFE, #C7D6EF);
+};
 `;

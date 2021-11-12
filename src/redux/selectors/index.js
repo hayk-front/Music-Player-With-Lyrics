@@ -25,6 +25,26 @@ export const getActiveChunk = createSelector(
   }
 );
 
+export const getLeftNeighbourChunk = createSelector(
+  [getProject, getAudioChunks],
+  (project, audioChunks) => {
+    if (project.activeChunkId === audioChunks[0].id) {
+      return { end: 0 };
+    }
+    return audioChunks.find((chunk) => chunk.id === project.activeChunkId - 1);
+  }
+);
+
+export const getRightNeighbourChunk = createSelector(
+  [getProject, getAudioChunks],
+  (project, audioChunks) => {
+    if (project.activeChunkId === audioChunks[audioChunks.length - 1].id) {
+      return { start: project.duration };
+    }
+    return audioChunks.find((chunk) => chunk.id === project.activeChunkId + 1);
+  }
+);
+
 export const getActiveChunkText = createSelector(
   getActiveChunk,
   (audioChunk) => audioChunk.textParams.text
@@ -48,7 +68,7 @@ export const getActiveChunkEndPoint = createSelector(
 // _______________________________________________________
 // GLOBALS
 export const getGlobals = (state) => {
-  return state.globals
+  return state.globals;
 };
 
 export const getIsResizable = createSelector(
@@ -75,4 +95,3 @@ export const getActiveChunkRef = createSelector(
   getGlobals,
   (globals) => globals.activeChunkRef
 );
-

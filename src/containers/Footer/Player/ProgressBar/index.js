@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { getElementWidthOnWindow, percentToSecond } from "../../../../helpers";
+import { calculateProgressPercent, getElementWidthOnWindow, percentToSecond } from "../../../../helpers";
 import { setProgressPercent } from "./helper";
 import * as Styled from "./styled";
 
@@ -8,7 +8,7 @@ export const ProgressBar = (props) => {
   const progress = useRef(null);
   const progressBar = useRef(null);
 
-  const calculateProgressPercent = (event) => {
+  const calculateProgress = (event) => {
     const clickedProgressCoordinate = event.clientX;
     const { elementStart, elementWidth } = getElementWidthOnWindow(
       progressBar.current,
@@ -19,6 +19,7 @@ export const ProgressBar = (props) => {
       elementWidth
     );
     setProgressBarPercent(progressPercent);
+
   };
 
   const setProgressBarPercent = (percent) => {
@@ -32,12 +33,12 @@ export const ProgressBar = (props) => {
 
   useEffect(() => {
     setProgressPercent(progress, progressPercent);
-  }, [progress, progressPercent, setProgressPercent]);
+  }, [progress, progressPercent]);
 
   return (
     <Styled.ProgressBar
       ref={progressBar}
-      onMouseDown={calculateProgressPercent}
+      onMouseDown={calculateProgress}
     >
       <Styled.ProgressPercent ref={progress} />
     </Styled.ProgressBar>

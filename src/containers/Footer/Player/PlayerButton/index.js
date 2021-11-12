@@ -3,11 +3,13 @@ import * as Styled from "./styled";
 
 export const PlayerButton = (props) => {
   const { audio } = props;
-  // TODO custom hook
   const [paused, setPaused] = useState(true);
 
-  const isPlaying = () => {
-    if (audio.paused) {
+  const onPlayPause = () => {
+    if(!audio) {
+      return
+    }
+    if (paused) {
       audio.play();
       setPaused(false);
     } else {
@@ -18,7 +20,7 @@ export const PlayerButton = (props) => {
 
   return (
     <Styled.Button
-      onClick={() => isPlaying()}
+      onClick={onPlayPause}
       paused={paused}
     ></Styled.Button>
   );

@@ -1,33 +1,46 @@
-import React, { useRef, useEffect, useState } from "react";
-import { pixelToPercent } from "../../../../../../helpers";
+import React, { useRef, useState, useEffect } from "react";
 import { useEventListener } from "../../../../../../custom-hooks/useEventListener";
 import * as Styled from "./styled";
 import {
-  setActiveChunkEndPoint,
-  setActiveChunkStartPoint,
+  setChunkEndTime,
   setActiveChunkId,
-  setWidthInPercent,
-  setWidthInPixels,
 } from "../../../../../../redux/actions/action";
 import { connect } from "react-redux";
 import {
-  getActiveChunkId,
-  getWidthInPercent,
-  getWidthInPixels,
+  getAudioDuration,
+  getRightNeighbourChunk,
 } from "../../../../../../redux/selectors";
+import {
+  getChunkEdgeSeconds,
+  getChunkStartEndPercents,
+  getWidth,
+  isReachedToRightBarrier,
+  setWidth,
+} from "../helper";
+import { pixelToPercent, secondToPercent } from "../../../../../../helpers";
 
 const RightEdge = React.memo((props) => {
   const {
-    audioChunk,
     chunkRef,
-    activeChunkId,
-    startPercent,
-    setActiveChunkEndPoint,
+    audioChunk,
+    timelineRef,
+    audioDuration,
+    setChunkEndTime,
     setActiveChunkId,
+    rightNeighbourChunk,
   } = props;
-  const minWidth = 50;
+  const minWidth = 40;
   const rightEdge = useRef(null);
   const [isResizable, setIsResizable] = useState(false);
+  const [neighbourStart, setNeighbourStart] = useState(audioDuration);
+  const chunk = chunkRef.current;
+  const timeline = timelineRef.current;
+
+  useEffect(() => {
+    if (rightNeighbourChunk) {
+      setNeighbourStart(rightNeighbourChunk.start);
+    }
+  }, [rightNeighbourChunk]);
 
   const resizeStart = () => {
     setActiveChunkId(audioChunk.id);
@@ -36,22 +49,34 @@ const RightEdge = React.memo((props) => {
 
   const resizeMove = (e) => {
     if (isResizable) {
-      if (chunkRef.current.clientWidth >= minWidth) {
-        chunkRef.current.style.width =
-          chunkRef.current.clientWidth + e.movementX + "px";
+      const startEndPercents = getChunkStartEndPercents(
+        chunk.offsetLeft,
+        chunk,
+        timeline
+      );
+      console.log("moved: ", startEndPercents.end);
+      if (getWidth(chunk) >= minWidth) {
+        const barrierStart = secondToPercent(neighbourStart, audioDuration);
+        if (
+          !isReachedToRightBarrier(startEndPercents.end, barrierStart)
+        ) {
+          const widthInPercent = pixelToPercent(
+            getWidth(chunk) + e.movementX,
+            getWidth(timeline)
+          );
+          setWidth(chunk, widthInPercent);
+        }
       }
     }
   };
 
   const resizeFinish = () => {
     setIsResizable(false);
-    // const endPercent =
-    //   pixelToPercent(window.innerWidth, chunkRef.current.clientWidth) +
-    //   startPercent;
-    // setActiveChunkEndPoint(endPercent);
+    const edgeSeconds = getChunkEdgeSeconds(chunk, timeline, audioDuration);
+    setChunkEndTime(edgeSeconds.endSecond);
   };
 
-  useEventListener("mousedown", resizeStart, rightEdge);
+  useEventListener("mousedown", resizeStart, rightEdge.current);
   useEventListener("mousemove", (e) => {
     if (isResizable) resizeMove(e);
   });
@@ -63,15 +88,11 @@ const RightEdge = React.memo((props) => {
 });
 
 const mapStateToProps = (state) => ({
-  widthInPercent: getWidthInPercent(state),
-  widthInPixels: getWidthInPixels(state),
-  activeChunkId: getActiveChunkId(state),
+  audioDuration: getAudioDuration(state),
+  rightNeighbourChunk: getRightNeighbourChunk(state),
 });
 
 export default connect(mapStateToProps, {
-  setActiveChunkEndPoint,
-  setActiveChunkStartPoint,
+  setChunkEndTime,
   setActiveChunkId,
-  setWidthInPixels,
-  setWidthInPercent,
 })(RightEdge);

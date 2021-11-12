@@ -9,8 +9,8 @@ import {
   removeChunk,
   editChunkText,
   setActiveChunkId,
-  setActiveChunkEndPoint,
-  setActiveChunkStartPoint,
+  setChunkEndTime,
+  setChunkStartTime,
 } from "../../../../redux/actions/action";
 import {
   parseSecondsToMinutesFormat,
@@ -22,8 +22,8 @@ const Subtitle = (props) => {
     removeChunk,
     audioChunk,
     audioDuration,
-    setActiveChunkStartPoint,
-    setActiveChunkEndPoint,
+    setChunkStartTime,
+    setChunkEndTime,
     editChunkText,
   } = props;
   const [timer, setTimer] = useState(null);
@@ -36,8 +36,13 @@ const Subtitle = (props) => {
   const [inputValue, setValue] = useState(audioChunk.textParams.text);
 
   useEffect(() => {
-    setEndTime(parseSecondsToMinutesFormat(audioChunk.end))
-  }, [audioChunk]);
+    setStartTime(parseSecondsToMinutesFormat(audioChunk.start));
+  }, [audioChunk.start]);
+  
+  useEffect(() => {
+    setEndTime(parseSecondsToMinutesFormat(audioChunk.end));
+  }, [audioChunk.end]);
+ 
 
   const updateText = (e) => {
     setActiveChunkId(audioChunk.id);
@@ -62,10 +67,10 @@ const Subtitle = (props) => {
       setTimeout(() => {
         if (point === "start") {
           const seconds = validateSeconds(e.target.value, audioDuration);
-          setActiveChunkStartPoint(seconds);
+          setChunkStartTime(seconds);
         } else {
           const seconds = validateSeconds(e.target.value, audioDuration);
-          setActiveChunkEndPoint(seconds);
+          setChunkEndTime(seconds);
         }
       }, 2500)
     );
@@ -104,6 +109,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   removeChunk,
   editChunkText,
-  setActiveChunkStartPoint,
-  setActiveChunkEndPoint,
+  setChunkStartTime,
+  setChunkEndTime,
 })(Subtitle);

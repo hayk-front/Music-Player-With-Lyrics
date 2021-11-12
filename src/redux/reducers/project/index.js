@@ -43,7 +43,7 @@ export const project = (state = initialState, action) => {
       case "SET_AUDIO_DURATION":
         setDuration(action)(state, draft);
         break;
-      case "SET_ACTIVE_AUDIO_CHUNK":
+      case "SET_ACTIVE_CHUNK_ID":
         setActiveChunk(action)(state, draft);
         break;
       case "ADD_AUDIO_CHUNK":

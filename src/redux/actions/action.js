@@ -7,7 +7,7 @@ export const setAudioDuration = (payload) => {
 };
 export const setActiveChunkId = (payload) => {
   return {
-    type: "SET_ACTIVE_AUDIO_CHUNK",
+    type: "SET_ACTIVE_CHUNK_ID",
     payload,
   };
 };
@@ -34,13 +34,13 @@ export const editChunkText = (payload) => {
     payload,
   };
 };
-export const setActiveChunkStartPoint = (payload) => {
+export const setChunkStartTime = (payload) => {
   return {
     type: "EDIT_CHUNK_START_TIME",
     payload,
   };
 };
-export const setActiveChunkEndPoint = (payload) => {
+export const setChunkEndTime = (payload) => {
   return {
     type: "EDIT_CHUNK_END_TIME",
     payload,
