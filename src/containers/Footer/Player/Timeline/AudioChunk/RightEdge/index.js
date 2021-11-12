@@ -49,17 +49,18 @@ const RightEdge = React.memo((props) => {
 
   const resizeMove = (e) => {
     if (isResizable) {
+      const mousePos = pixelToPercent(
+        e.clientX - timeline.offsetLeft,
+        getWidth(timeline)
+      );
       const startEndPercents = getChunkStartEndPercents(
-        chunk.offsetLeft,
+        chunk.offsetLeft + e.movementX,
         chunk,
         timeline
       );
-      console.log("moved: ", startEndPercents.end);
       if (getWidth(chunk) >= minWidth) {
         const barrierStart = secondToPercent(neighbourStart, audioDuration);
-        if (
-          !isReachedToRightBarrier(startEndPercents.end, barrierStart)
-        ) {
+        if (!isReachedToRightBarrier(startEndPercents.end, barrierStart, mousePos)) {
           const widthInPercent = pixelToPercent(
             getWidth(chunk) + e.movementX,
             getWidth(timeline)

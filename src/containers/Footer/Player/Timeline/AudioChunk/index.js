@@ -18,6 +18,7 @@ import {
 import {
   calculatePercentBySecond,
   percentToPixel,
+  pixelToPercent,
 } from "../../../../../helpers";
 import LeftEdge from "./LeftEdge";
 import RightEdge from "./RightEdge";
@@ -25,6 +26,7 @@ import { useEventListener } from "../../../../../custom-hooks/useEventListener";
 import {
   getChunkEdgeSeconds,
   getChunkStartEndPercents,
+  getWidth,
   isMovedUntilBarrier,
 } from "./helper";
 
@@ -63,6 +65,10 @@ const AudioChunk = React.memo((props) => {
 
   const movingChunk = (e) => {
     if (isMovable && chunk.current) {
+      const mousePos = pixelToPercent(
+        e.clientX - timeline.current.offsetLeft,
+        getWidth(timeline.current)
+      );
       const movedSize = chunk.current.offsetLeft + e.movementX;
       const startEndPercents = getChunkStartEndPercents(
         movedSize,
@@ -75,7 +81,8 @@ const AudioChunk = React.memo((props) => {
           startEndPercents.end,
           prevChunkEnd,
           nextChunkStart,
-          audioDuration
+          audioDuration,
+          mousePos
         )
       )
         chunk.current.style.left = `${startEndPercents.start}%`;

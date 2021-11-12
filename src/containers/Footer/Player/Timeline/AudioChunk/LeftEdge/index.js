@@ -42,18 +42,19 @@ const LeftEdge = React.memo((props) => {
   }, [leftNeighbourChunk]);
 
   const resizeToLeft = (e) => {
-    const mouseMoveSize = e.clientX - timeline.offsetLeft;
+    const movedSize = chunk.offsetLeft + e.movementX;
     let newWidth = getWidth(chunk);
     const startEndPercents = getChunkStartEndPercents(
-      mouseMoveSize,
+      movedSize,
       chunk,
       timeline
     );
     const barrierEnd = secondToPercent(neighbourEnd, audioDuration);
-    if (!isReachedLeftBarrier(startEndPercents.start, barrierEnd)) {
+    const mousePos = pixelToPercent(e.clientX - timeline.offsetLeft, getWidth(timeline))
+    if (!isReachedLeftBarrier(startEndPercents.start, barrierEnd, mousePos)) {
       newWidth -= e.movementX;
       if (newWidth > minWidth) {
-        const leftInPercent = pixelToPercent(mouseMoveSize, getWidth(timeline));
+        const leftInPercent = pixelToPercent(movedSize, getWidth(timeline));
         chunk.style.left = `${leftInPercent}%`;
       }
       const widthInPercent = pixelToPercent(newWidth, getWidth(timeline));
