@@ -1,48 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { getAudioUrl } from "../../../redux/selectors";
-import { PlayerButton } from "./PlayerButton";
-import { ProgressBar } from "./ProgressBar";
-import * as Styled from "./styled";
+import { getAudioChunks, getAudioUrl } from "../../../redux/selectors";
+import {
+  setAudioElement,
+  setCurrentLyrics,
+  setShowLyrics,
+} from "../../../redux/actions/action";
+import PlayerButton from "./PlayerButton";
+import ProgressBar from "./ProgressBar";
 import Timeline from "./Timeline";
-
 import { useRefHook } from "../../../custom-hooks";
-
-const timeToPercent = (time, duration) => (time / duration) * 100;
+import { secondToPercent } from "../../../helpers";
 
 const Player = React.memo((props) => {
-  const { audioUrl } = props;
+  const {
+    audioUrl,
+    audioChunks,
+    setAudioElement,
+    setShowLyrics,
+    setCurrentLyrics,
+  } = props;
   const [progressPercent, setProgressStatus] = useState(0);
-  const [audioElement, setAudioElement] = useState(null)
-  
+  const [audioElement, setAudio] = useState(null);
   const audioPlayer = useRefHook(audioElement);
 
+  useEffect(() => {
+    setAudioElement(audioElement);
+  }, [audioElement, setAudioElement]);
+
+  const onShowLyrics = (time) => {
+    const currPlayingChunk = audioChunks.find(
+      (chunk) => chunk.start <= time && chunk.end > time
+    );
+    if (currPlayingChunk) {
+      setCurrentLyrics(currPlayingChunk.textParams.text);
+      setShowLyrics(true);
+    } else if (!currPlayingChunk) {
+      setShowLyrics(false);
+    }
+  };
+
   const updateProgressBar = () => {
-    const timePercent = timeToPercent(
+    const timePercent = secondToPercent(
       audioPlayer.currentTime,
       audioPlayer.duration
     );
+    onShowLyrics(audioPlayer.currentTime);
     setProgressStatus(timePercent);
   };
 
   return (
-    <Styled.Player>
-      <audio
-        ref={setAudioElement}
-        src={audioUrl}
-        onTimeUpdate={updateProgressBar}
-      />
+    <div>
+      <audio ref={setAudio} src={audioUrl} onTimeUpdate={updateProgressBar} />
       <div className="G-flex G-flex-column G-align-center">
-        <PlayerButton audio={audioPlayer} />
-        <ProgressBar audio={audioPlayer} progressPercent={progressPercent} />
-        <Timeline />
+        <PlayerButton />
+        <ProgressBar progressPercent={progressPercent} />
+        <Timeline progressPercent={progressPercent} />
       </div>
-    </Styled.Player>
+    </div>
   );
 });
 
 const mapStateToProps = (state) => ({
   audioUrl: getAudioUrl(state),
+  audioChunks: getAudioChunks(state),
 });
 
-export default connect(mapStateToProps)(Player);
+export default connect(mapStateToProps, {
+  setAudioElement,
+  setShowLyrics,
+  setCurrentLyrics,
+})(Player);

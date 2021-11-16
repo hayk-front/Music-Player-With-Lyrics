@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Subtitle = styled.div`
   position: relative;
+  min-wdith: 285px;
   width: 96%;
   display: flex;
   flex-direction: column;
@@ -23,5 +24,13 @@ export const Icon = styled.img`
   right: 4%;
   width: 18px;
   height: 18px;
-  filter: invert(70%) sepia(2%) saturate(9%) hue-rotate(334deg) brightness(94%) contrast(93%);
+  filter: invert(70%) sepia(2%) saturate(9%) hue-rotate(334deg) brightness(94%)
+    contrast(93%);
+`;
+
+export const TimeInputSection = styled.div`
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;

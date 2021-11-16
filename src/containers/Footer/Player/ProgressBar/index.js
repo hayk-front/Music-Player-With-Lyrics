@@ -1,9 +1,15 @@
 import React, { useRef, useEffect } from "react";
-import { calculateProgressPercent, getElementWidthOnWindow, percentToSecond } from "../../../../helpers";
+import { connect } from "react-redux";
+import {
+  calculateProgressPercent,
+  getElementWidthOnWindow,
+  percentToSecond,
+} from "../../../../helpers";
+import { getAudioElement } from "../../../../redux/selectors";
 import { setProgressPercent } from "./helper";
 import * as Styled from "./styled";
 
-export const ProgressBar = (props) => {
+const ProgressBar = (props) => {
   const { audio, progressPercent } = props;
   const progress = useRef(null);
   const progressBar = useRef(null);
@@ -19,7 +25,6 @@ export const ProgressBar = (props) => {
       elementWidth
     );
     setProgressBarPercent(progressPercent);
-
   };
 
   const setProgressBarPercent = (percent) => {
@@ -36,11 +41,13 @@ export const ProgressBar = (props) => {
   }, [progress, progressPercent]);
 
   return (
-    <Styled.ProgressBar
-      ref={progressBar}
-      onMouseDown={calculateProgress}
-    >
+    <Styled.ProgressBar ref={progressBar} onMouseDown={calculateProgress}>
       <Styled.ProgressPercent ref={progress} />
     </Styled.ProgressBar>
   );
 };
+
+const mapStateToProps = (state) => ({
+  audio: getAudioElement(state),
+});
+export default connect(mapStateToProps)(ProgressBar);

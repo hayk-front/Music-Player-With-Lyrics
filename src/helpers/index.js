@@ -1,5 +1,14 @@
 // Global Pure Functions Here
 
+export const debounce = (fn, ms) => {
+  let timeoutID;
+
+  return (...arg) => {
+    if (timeoutID) clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => fn(...arg), ms);
+  };
+};
+
 export const getElementWidthOnWindow = (parent, clientX) => {
   const elementStart = clientX - parent.offsetLeft;
   const elementWidth = window.innerWidth - 2 * parent.offsetLeft;
@@ -43,14 +52,36 @@ export const parseSecondsToMinutesFormat = (seconds) => {
   const minutes = (seconds % 3600) / 60;
   return [minutes, seconds % 60].map(format).join(":");
 };
+
 export const parseMinutesFormatToSeconds = (minutesFormat) => {
   // 01:50 to 110
   const arr = minutesFormat.split(":");
   const seconds = arr[0] * 60 + +arr[1];
   return seconds;
 };
-export const validateSeconds = (inputSecond, audioDuration) => {
+
+export const calcEndSecondByStart = (startSec, initialEndSec) => {
+  const minSecondRange = 5;
+  if (startSec > initialEndSec - minSecondRange) {
+    return startSec + minSecondRange;
+  }
+  return null;
+};
+
+export const validateSeconds = (
+  inputSecond,
+  startTime,
+  point,
+  leftBarrierSec,
+  rightBarrierSec
+) => {
   let second = parseMinutesFormatToSeconds(inputSecond);
-  if (second > audioDuration) second = audioDuration;
+  if (point === "start") {
+    if (second > rightBarrierSec) second = rightBarrierSec - 5;
+    if (second < leftBarrierSec) second = leftBarrierSec;
+  } else {
+    if (second < startTime) second = startTime + 5;
+    if (second > rightBarrierSec) second = rightBarrierSec;
+  }
   return second;
 };

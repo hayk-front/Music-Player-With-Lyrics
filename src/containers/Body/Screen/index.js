@@ -1,9 +1,20 @@
 import React from "react";
 import * as Styled from "./styled";
+import Lyrics from "./Lyrics";
+import { connect } from "react-redux";
+import { getShowLyrics } from "../../../redux/selectors";
 
-const Screen = () => {
-
-  return <Styled.Screen></Styled.Screen>;
+const Screen = (props) => {
+  const { showLyrics } = props;
+  return (
+    <Styled.Screen>
+      { showLyrics && <Lyrics /> }
+    </Styled.Screen>
+  );
 };
 
-export default Screen;
+const mapStateToProps = (state) => ({
+  showLyrics: getShowLyrics(state),
+});
+
+export default connect(mapStateToProps)(Screen);

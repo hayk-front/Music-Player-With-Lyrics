@@ -1,5 +1,5 @@
 import React from "react";
-import { Body } from "./containers/Body";
+import Body from "./containers/Body";
 import { Footer } from "./containers/Footer";
 import Header from "./containers/Header/";
 

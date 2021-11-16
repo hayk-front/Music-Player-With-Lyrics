@@ -18,11 +18,7 @@ export const getChunkStartEndPercents = (movedSize, chunk, timeline) => {
   const start = pixelToPercent(movedSize, getWidth(timeline));
   const chunkWidthPercent = pixelToPercent(getWidth(chunk), getWidth(timeline));
   const end = start + chunkWidthPercent;
-
-  return {
-    start,
-    end,
-  };
+  return { start, end };
 };
 
 export const isReachedToRightBarrier = (
@@ -47,24 +43,18 @@ export const isReachedLeftBarrier = (
   return true;
 };
 
-export const isMovedUntilBarrier = (
+
+// 16.11.21 - TODO: move again only when mouse position comes back to the center
+export const isMovedToBarrier = (
   startPercent,
   endPercent,
   leftBarrierSecond,
   rightBarrierSecond,
-  duration,
-  mousePos
+  duration
 ) => {
   const leftPercent = secondToPercent(leftBarrierSecond, duration);
   const rightPercent = secondToPercent(rightBarrierSecond, duration);
-  const centerOfChunk = Math.floor(endPercent / 2);
-  console.log(centerOfChunk, mousePos);
-  if (
-    endPercent < rightPercent &&
-    startPercent > leftPercent &&
-    // TODO: ? mouse position
-    Math.floor(mousePos) === centerOfChunk
-  ) {
+  if (endPercent < rightPercent && startPercent > leftPercent) {
     return false;
   }
   return true;

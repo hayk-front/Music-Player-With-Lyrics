@@ -26,6 +26,7 @@ export const getActiveChunk = createSelector(
 );
 
 export const getLeftNeighbourChunk = createSelector(
+  // TODO: handle error WHEN DELETING A MIDDLE CHUNK
   [getProject, getAudioChunks],
   (project, audioChunks) => {
     if (project.activeChunkId === audioChunks[0].id) {
@@ -36,6 +37,7 @@ export const getLeftNeighbourChunk = createSelector(
 );
 
 export const getRightNeighbourChunk = createSelector(
+  // TODO: handle error WHEN DELETING A MIDDLE CHUNK
   [getProject, getAudioChunks],
   (project, audioChunks) => {
     if (project.activeChunkId === audioChunks[audioChunks.length - 1].id) {
@@ -43,11 +45,6 @@ export const getRightNeighbourChunk = createSelector(
     }
     return audioChunks.find((chunk) => chunk.id === project.activeChunkId + 1);
   }
-);
-
-export const getActiveChunkText = createSelector(
-  getActiveChunk,
-  (audioChunk) => audioChunk.textParams.text
 );
 
 export const getActiveChunkId = createSelector(
@@ -65,8 +62,16 @@ export const getActiveChunkEndPoint = createSelector(
   (audioChunk) => audioChunk.end
 );
 
-// _______________________________________________________
-// GLOBALS
+export const getLyricsCoordinate = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.textParams.coordinate
+);
+
+
+
+
+
+// GLOBALS _________________________________________
 export const getGlobals = (state) => {
   return state.globals;
 };
@@ -74,6 +79,16 @@ export const getGlobals = (state) => {
 export const getIsResizable = createSelector(
   getGlobals,
   (globals) => globals.isResizable
+);
+
+export const getCurrentLyrics = createSelector(
+  getGlobals,
+  (globals) => globals.currentLyrics
+);
+
+export const getShowLyrics = createSelector(
+  getGlobals,
+  (globals) => globals.showLyrics
 );
 
 export const getWidthInPercent = createSelector(
@@ -95,3 +110,9 @@ export const getActiveChunkRef = createSelector(
   getGlobals,
   (globals) => globals.activeChunkRef
 );
+export const getAudioElement = createSelector(
+  getGlobals,
+  (globals) => globals.audio
+);
+
+

@@ -34,21 +34,37 @@ export const editChunkText = (payload) => {
     payload,
   };
 };
-export const setChunkStartTime = (payload) => {
+export const setChunkTimes = (payload) => {
   return {
-    type: "EDIT_CHUNK_START_TIME",
+    type: "EDIT_CHUNK_TIMES",
     payload,
   };
 };
-export const setChunkEndTime = (payload) => {
-  return {
-    type: "EDIT_CHUNK_END_TIME",
-    payload,
-  };
-};
+
+
+
+
 
 
 // state.globals actions
+export const setAudioElement = (payload) => {
+  return {
+    type: "SET_AUDIO_ELEMENT",
+    payload,
+  };
+};
+export const setShowLyrics = (payload) => {
+  return {
+    type: "SET_SHOW_LYRICS",
+    payload,
+  };
+};
+export const setCurrentLyrics = (payload) => {
+  return {
+    type: "SET_CURRENT_LYRICS",
+    payload,
+  };
+};
 export const setIsResizable = (payload) => {
   return {
     type: "SET_IS_RESIZABLE",

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { useEventListener } from "../../../../../../custom-hooks/useEventListener";
 import * as Styled from "./styled";
 import {
-  setChunkStartTime,
+  setChunkTimes,
   setActiveChunkId,
 } from "../../../../../../redux/actions/action";
 import { connect } from "react-redux";
@@ -25,11 +25,11 @@ const LeftEdge = React.memo((props) => {
     chunkRef,
     timelineRef,
     audioDuration,
-    setChunkStartTime,
+    setChunkTimes,
     setActiveChunkId,
     leftNeighbourChunk,
   } = props;
-  const minWidth = 40;
+  const minWidth = 30;
   const leftEdge = useRef(null);
   const [isResizable, setIsResizable] = useState(false);
   const [neighbourEnd, setNeighbourEnd] = useState(0);
@@ -50,7 +50,10 @@ const LeftEdge = React.memo((props) => {
       timeline
     );
     const barrierEnd = secondToPercent(neighbourEnd, audioDuration);
-    const mousePos = pixelToPercent(e.clientX - timeline.offsetLeft, getWidth(timeline))
+    const mousePos = pixelToPercent(
+      e.clientX - timeline.offsetLeft,
+      getWidth(timeline)
+    );
     if (!isReachedLeftBarrier(startEndPercents.start, barrierEnd, mousePos)) {
       newWidth -= e.movementX;
       if (newWidth > minWidth) {
@@ -80,7 +83,7 @@ const LeftEdge = React.memo((props) => {
   const resizeFinish = () => {
     setIsResizable(false);
     const edgeSeconds = getChunkEdgeSeconds(chunk, timeline, audioDuration);
-    setChunkStartTime(edgeSeconds.startSecond);
+    setChunkTimes({ start: edgeSeconds.startSecond });
   };
 
   useEventListener("mousedown", resizeStart, leftEdge.current);
@@ -100,6 +103,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  setChunkStartTime,
+  setChunkTimes,
   setActiveChunkId,
 })(LeftEdge);

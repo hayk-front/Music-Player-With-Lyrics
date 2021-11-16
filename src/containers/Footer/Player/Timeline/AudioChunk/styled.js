@@ -4,11 +4,9 @@ export const Chunk = styled.div`
   position: absolute;
   cursor: grab;
   left: ${(props) => props.left + "%"};
-  min-width: 40px;
+  min-width: 30px;
   width: ${(props) => props.width + "%"};
   height: 100%;
   border-radius: 7px;
   background: linear-gradient(#A7ADDF, #b5bbf2, #A7ADDF);
 `;
-
-

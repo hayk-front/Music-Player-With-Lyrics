@@ -13,3 +13,15 @@ export const setChunksActiveEdge = (action) => (state, draft) => {
 export const setActiveChunkRef = (action) => (state, draft) => {
   draft.activeChunkRef = action.payload;
 };
+
+export const setAudioElement = (action) => (state, draft) => {
+  draft.audio = action.payload;
+};
+
+export const setShowLyrics = (action) => (state, draft) => {
+  draft.showLyrics = action.payload;
+};
+export const setCurrentLyrics = (action) => (state, draft) => {
+  draft.currentLyrics = action.payload;
+};
+

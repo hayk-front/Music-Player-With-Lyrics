@@ -17,21 +17,23 @@ export const addChunk = () => (state, draft) => {
   if (isAllowedToAddChunk(lastChunk, draft.duration)) {
     draft.audioChunks.push({
       id: lastChunk.id + 1,
-      start: lastChunk.end + 1,
-      end: lastChunk.end + 6,
+      start: lastChunk.end,
+      end: draft.duration,
       textParams: {
-        text: "Some Text Here",
-        coordinates: [120, 190],
+        text: "",
+        coordinate: [130, 40],
       },
     });
   }
 };
 
 export const removeChunk = (action) => (state, draft) => {
-  const removableIndex = draft.audioChunks.findIndex(
-    (chunk) => chunk.id === action.payload
-  );
-  draft.audioChunks.splice(removableIndex, 1);
+  if (draft.audioChunks.length > 1) {
+    const removableIndex = draft.audioChunks.findIndex(
+      (chunk) => chunk.id === action.payload
+    );
+    draft.audioChunks.splice(removableIndex, 1);
+  }
 };
 
 export const editText = (action) => (state, draft) => {
@@ -39,12 +41,8 @@ export const editText = (action) => (state, draft) => {
   activeChunk.textParams.text = action.payload;
 };
 
-export const editStartTime = (action) => (state, draft) => {
+export const editChunkTimes = (action) => (state, draft) => {
   const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
-  activeChunk.start = action.payload;
-};
-
-export const editEndTime = (action) => (state, draft) => {
-  const activeChunk = getActiveChunk(draft.audioChunks, draft.activeChunkId);
-  activeChunk.end = action.payload;
+  if (action.payload.start) activeChunk.start = action.payload.start;
+  if (action.payload.end) activeChunk.end = action.payload.end;
 };

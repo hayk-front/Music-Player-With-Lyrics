@@ -10,15 +10,14 @@ import {
 } from "../../../../../redux/selectors";
 
 import {
-  setChunkEndTime,
-  setChunkStartTime,
+  setChunkTimes,
   setWidthInPixels,
+  setShowLyrics,
   setActiveChunkId,
 } from "../../../../../redux/actions/action";
 import {
   calculatePercentBySecond,
   percentToPixel,
-  pixelToPercent,
 } from "../../../../../helpers";
 import LeftEdge from "./LeftEdge";
 import RightEdge from "./RightEdge";
@@ -26,8 +25,7 @@ import { useEventListener } from "../../../../../custom-hooks/useEventListener";
 import {
   getChunkEdgeSeconds,
   getChunkStartEndPercents,
-  getWidth,
-  isMovedUntilBarrier,
+  isMovedToBarrier,
 } from "./helper";
 
 const AudioChunk = React.memo((props) => {
@@ -36,8 +34,7 @@ const AudioChunk = React.memo((props) => {
     timeline,
     audioDuration,
     setWidthInPixels,
-    setChunkStartTime,
-    setChunkEndTime,
+    setChunkTimes,
     activeChunkId,
     setActiveChunkId,
     leftNeighbourChunk,
@@ -65,10 +62,6 @@ const AudioChunk = React.memo((props) => {
 
   const movingChunk = (e) => {
     if (isMovable && chunk.current) {
-      const mousePos = pixelToPercent(
-        e.clientX - timeline.current.offsetLeft,
-        getWidth(timeline.current)
-      );
       const movedSize = chunk.current.offsetLeft + e.movementX;
       const startEndPercents = getChunkStartEndPercents(
         movedSize,
@@ -76,13 +69,13 @@ const AudioChunk = React.memo((props) => {
         timeline.current
       );
       if (
-        !isMovedUntilBarrier(
+        !isMovedToBarrier(
           startEndPercents.start,
           startEndPercents.end,
           prevChunkEnd,
           nextChunkStart,
           audioDuration,
-          mousePos
+          null
         )
       )
         chunk.current.style.left = `${startEndPercents.start}%`;
@@ -106,9 +99,10 @@ const AudioChunk = React.memo((props) => {
       timeline.current,
       audioDuration
     );
-    console.log(edgeSeconds.startSecond, edgeSeconds.endSecond);
-    setChunkStartTime(edgeSeconds.startSecond);
-    setChunkEndTime(edgeSeconds.endSecond);
+    setChunkTimes({
+      start: edgeSeconds.startSecond,
+      end: edgeSeconds.endSecond
+    })
   };
   useEventListener("mousedown", (e) => dragStart(e), chunk.current);
   useEventListener("mousemove", (e) => {
@@ -151,7 +145,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   setWidthInPixels,
-  setChunkStartTime,
-  setChunkEndTime,
+  setChunkTimes,
   setActiveChunkId,
+  setShowLyrics,
 })(AudioChunk);

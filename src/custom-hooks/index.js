@@ -7,7 +7,7 @@ export const useRefHook = (intialRef) => {
     setRef(intialRef);
   }, [intialRef, setRef]);
 
-  return  ref;
+  return ref;
 };
 
 export const usePlayPause = (audio) => {

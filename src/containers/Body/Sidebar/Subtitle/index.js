@@ -2,31 +2,40 @@ import React, { useState, useEffect } from "react";
 import * as Styled from "./styled";
 import { TextInput } from "./TextInput";
 import { TimeInput } from "./TimeInput";
-import "./index.scss";
-import { getAudioDuration } from "../../../../redux/selectors";
+import {
+  getActiveChunkId,
+  getAudioDuration,
+  getLeftNeighbourChunk,
+  getRightNeighbourChunk,
+} from "../../../../redux/selectors";
 import { connect } from "react-redux";
 import {
   removeChunk,
   editChunkText,
   setActiveChunkId,
-  setChunkEndTime,
-  setChunkStartTime,
+  setChunkTimes,
 } from "../../../../redux/actions/action";
 import {
+  calcEndSecondByStart,
+  debounce,
   parseSecondsToMinutesFormat,
   validateSeconds,
 } from "../../../../helpers";
+const debounced700 = debounce((fn) => fn(), 700);
+const debounced1000 = debounce((fn) => fn(), 1000);
 
 const Subtitle = (props) => {
   const {
     removeChunk,
     audioChunk,
     audioDuration,
-    setChunkStartTime,
-    setChunkEndTime,
+    setChunkTimes,
     editChunkText,
+    leftChunk,
+    rightChunk,
+    activeChunkId,
+    setActiveChunkId,
   } = props;
-  const [timer, setTimer] = useState(null);
   const [startTime, setStartTime] = useState(
     parseSecondsToMinutesFormat(audioChunk.start)
   );
@@ -34,46 +43,58 @@ const Subtitle = (props) => {
     parseSecondsToMinutesFormat(audioChunk.end)
   );
   const [inputValue, setValue] = useState(audioChunk.textParams.text);
+  const [leftBarrierSec, setLeftBarrierSec] = useState(0);
+  const [rightBarrierSec, setRightBarrierSec] = useState(audioDuration);
 
   useEffect(() => {
     setStartTime(parseSecondsToMinutesFormat(audioChunk.start));
   }, [audioChunk.start]);
-  
+
+  useEffect(() => {
+    setRightBarrierSec(rightChunk.start);
+    setLeftBarrierSec(leftChunk.end);
+  }, [activeChunkId, rightChunk, leftChunk]);
+
   useEffect(() => {
     setEndTime(parseSecondsToMinutesFormat(audioChunk.end));
   }, [audioChunk.end]);
- 
 
-  const updateText = (e) => {
+  const updateChunkLyrics = (e) => {
     setActiveChunkId(audioChunk.id);
     setValue(e.target.value);
-    clearTimeout(timer);
-    setTimer(
-      setTimeout(() => {
-        editChunkText(e.target.value);
-      }, 1500)
-    );
+
+    debounced700(() => {
+      editChunkText(e.target.value);
+    });
   };
 
-  const updateTime = (e, point) => {
+  const updateChunkTime = (e, point) => {
     setActiveChunkId(audioChunk.id);
+    const seconds = validateSeconds(
+      e.target.value,
+      audioChunk.start,
+      point,
+      leftBarrierSec,
+      rightBarrierSec
+    );
+    const validSecondsToMinute = parseSecondsToMinutesFormat(seconds);
+
     if (point === "start") {
       setStartTime(e.target.value);
+      debounced1000(() => {
+        setStartTime(validSecondsToMinute);
+        setChunkTimes({
+          start: seconds,
+          end: calcEndSecondByStart(seconds, audioChunk.end),
+        });
+      });
     } else {
       setEndTime(e.target.value);
+      debounced1000(() => {
+        setEndTime(validSecondsToMinute);
+        setChunkTimes({ start: null, end: seconds });
+      });
     }
-    clearTimeout(timer);
-    setTimer(
-      setTimeout(() => {
-        if (point === "start") {
-          const seconds = validateSeconds(e.target.value, audioDuration);
-          setChunkStartTime(seconds);
-        } else {
-          const seconds = validateSeconds(e.target.value, audioDuration);
-          setChunkEndTime(seconds);
-        }
-      }, 2500)
-    );
   };
 
   return (
@@ -84,31 +105,34 @@ const Subtitle = (props) => {
         onClick={() => removeChunk(audioChunk.id)}
       />
 
-      <TextInput text={inputValue} updateText={updateText} />
+      <TextInput text={inputValue} updateChunkLyrics={updateChunkLyrics} />
 
-      <div className="time-inputs-section">
+      <Styled.TimeInputSection>
         <TimeInput
           time={startTime}
           point="start"
-          updateTime={(e) => updateTime(e, "start")}
+          updateChunkTime={(e) => updateChunkTime(e, "start")}
         />
         <TimeInput
           time={endTime}
           point="end"
-          updateTime={(e) => updateTime(e, "end")}
+          updateChunkTime={(e) => updateChunkTime(e, "end")}
         />
-      </div>
+      </Styled.TimeInputSection>
     </Styled.Subtitle>
   );
 };
 
 const mapStateToProps = (state) => ({
   audioDuration: getAudioDuration(state),
+  activeChunkId: getActiveChunkId(state),
+  leftChunk: getLeftNeighbourChunk(state),
+  rightChunk: getRightNeighbourChunk(state),
 });
 
 export default connect(mapStateToProps, {
   removeChunk,
   editChunkText,
-  setChunkStartTime,
-  setChunkEndTime,
+  setChunkTimes,
+  setActiveChunkId,
 })(Subtitle);

@@ -5,33 +5,32 @@ import {
   removeChunk,
   setActiveChunk,
   editText,
-  editStartTime,
-  editEndTime,
+  editChunkTimes,
 } from "./producer";
 
 const initialState = {
-  audioUrl: "https://soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+  audioUrl: "./songs/song.mp3",
   canvasWidth: 1920,
   canvasHeight: 1080,
-  duration: 186,
-  activeChunkId: 1,
+  duration: 245,
+  activeChunkId: null,
   audioChunks: [
     {
       id: 1,
-      start: 5,
-      end: 25,
+      start: 15,
+      end: 23,
       textParams: {
-        text: "Some Text",
-        coordinates: [120, 190],
+        text: "You shout it out, But I can't hear a word you say",
+        coordinate: [130, 40],
       },
     },
     {
       id: 2,
-      start: 80,
-      end: 140,
+      start: 46,
+      end: 54,
       textParams: {
-        text: "Some Text",
-        coordinates: [120, 190],
+        text: "I'm bulletproof, nothing to lose, Fire away, fire away",
+        coordinate: [130, 40],
       },
     },
   ],
@@ -52,11 +51,8 @@ export const project = (state = initialState, action) => {
       case "REMOVE_AUDIO_CHUNK":
         removeChunk(action)(state, draft);
         break;
-      case "EDIT_CHUNK_START_TIME":
-        editStartTime(action)(state, draft);
-        break;
-      case "EDIT_CHUNK_END_TIME":
-        editEndTime(action)(state, draft);
+      case "EDIT_CHUNK_TIMES":
+        editChunkTimes(action)(state, draft);
         break;
       case "EDIT_CHUNK_TEXT":
         editText(action)(state, draft);
