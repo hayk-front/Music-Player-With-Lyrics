@@ -21,8 +21,8 @@ import { pixelToPercent, secondToPercent } from "../../../../../../helpers";
 
 const LeftEdge = React.memo((props) => {
   const {
-    audioChunk,
     chunkRef,
+    audioChunk,
     timelineRef,
     audioDuration,
     setChunkTimes,

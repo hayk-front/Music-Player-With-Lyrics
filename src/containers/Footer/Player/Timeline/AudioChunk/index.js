@@ -19,14 +19,13 @@ import {
   calculatePercentBySecond,
   percentToPixel,
 } from "../../../../../helpers";
-import LeftEdge from "./LeftEdge";
-import RightEdge from "./RightEdge";
 import { useEventListener } from "../../../../../custom-hooks/useEventListener";
 import {
   getChunkEdgeSeconds,
   getChunkStartEndPercents,
   isMovedToBarrier,
 } from "./helper";
+import ChunkEdge from "./ChunkEdge";
 
 const AudioChunk = React.memo((props) => {
   const {
@@ -114,7 +113,25 @@ const AudioChunk = React.memo((props) => {
 
   return (
     <Styled.Chunk width={chunkSizeInPercent} left={startPercent} ref={chunk}>
-      <LeftEdge
+      <ChunkEdge 
+        audioChunk={audioChunk}
+        chunkRef={chunk}
+        timelineRef={timeline}
+        side="left"
+        startPercent={startPercent}
+        endPercent={endPercent}
+        setChunkSizeInPercent={setChunkSizeInPercent}
+      />
+      <ChunkEdge 
+        audioChunk={audioChunk}
+        chunkRef={chunk}
+        timelineRef={timeline}
+        side="right"
+        startPercent={startPercent}
+        endPercent={endPercent}
+        setChunkSizeInPercent={setChunkSizeInPercent}
+      />
+      {/* <LeftEdge
         audioChunk={audioChunk}
         chunkRef={chunk}
         timelineRef={timeline}
@@ -130,7 +147,7 @@ const AudioChunk = React.memo((props) => {
         startPercent={startPercent}
         endPercent={endPercent}
         setChunkSizeInPercent={setChunkSizeInPercent}
-      />
+      /> */}
     </Styled.Chunk>
   );
 });
