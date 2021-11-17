@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { getAudioChunks } from "../../../redux/selectors";
-import AddButton from "./AddButton";
+import AddButton from "../../../components/AddButton";
 import * as Styled from "./styled";
 import Subtitle from "./Subtitle";
 

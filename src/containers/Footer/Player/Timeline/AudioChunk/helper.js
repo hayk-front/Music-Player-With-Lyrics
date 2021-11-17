@@ -1,12 +1,11 @@
 import {
   caluclateSecondByPercent,
-  pixelToPercent,
-  secondToPercent,
+  calcPercent,
 } from "../../../../../helpers";
 
 export const getChunkEdgeSeconds = (chunk, timeline, audioDuration) => {
-  const chunkWidth = pixelToPercent(chunk.clientWidth, timeline.clientWidth);
-  const startPercent = pixelToPercent(chunk.offsetLeft, timeline.clientWidth);
+  const chunkWidth = calcPercent(chunk.clientWidth, timeline.clientWidth);
+  const startPercent = calcPercent(chunk.offsetLeft, timeline.clientWidth);
   const startSecond = caluclateSecondByPercent(startPercent, audioDuration);
   const endPercent = chunkWidth + startPercent;
   const endSecond = caluclateSecondByPercent(endPercent, audioDuration);
@@ -15,36 +14,55 @@ export const getChunkEdgeSeconds = (chunk, timeline, audioDuration) => {
 };
 
 export const getChunkStartEndPercents = (movedSize, chunk, timeline) => {
-  const start = pixelToPercent(movedSize, getWidth(timeline));
-  const chunkWidthPercent = pixelToPercent(getWidth(chunk), getWidth(timeline));
+  const start = calcPercent(movedSize, getWidth(timeline));
+  const chunkWidthPercent = calcPercent(getWidth(chunk), getWidth(timeline));
   const end = start + chunkWidthPercent;
   return { start, end };
 };
 
-export const isReachedToRightBarrier = (
-  endPercent,
+// export const isReachedToRightBarrier = (
+//   endPercent,
+//   barrierPercent,
+//   mousePos
+// ) => {
+//   if (endPercent < barrierPercent && mousePos <= endPercent) {
+//     return false;
+//   }
+//   return true;
+// };
+
+// export const isReachedLeftBarrier = (
+//   startPercent,
+//   barrierPercent,
+//   mousePos
+// ) => {
+//   if (startPercent > barrierPercent && mousePos >= startPercent) {
+//     return false;
+//   }
+//   return true;
+// };
+
+export const isReachedToBarrier = (
+  startEndPercents,
   barrierPercent,
-  mousePos
+  mousePos,
+  isRight
 ) => {
-  if (endPercent < barrierPercent && mousePos <= endPercent) {
-    return false;
+  if (isRight) {
+    const endPercent = startEndPercents.end;
+    if (endPercent < barrierPercent && mousePos <= endPercent) {
+      return false;
+    }
+    return true;
+  } else {
+    const startPercent = startEndPercents.start;
+    if (startPercent > barrierPercent && mousePos >= startPercent) {
+      return false;
+    }
+    return true;
   }
-  return true;
 };
 
-export const isReachedLeftBarrier = (
-  startPercent,
-  barrierPercent,
-  mousePos
-) => {
-  if (startPercent > barrierPercent && mousePos >= startPercent) {
-    return false;
-  }
-  return true;
-};
-
-
-// 16.11.21 - TODO: move again only when mouse position comes back to the center
 export const isMovedToBarrier = (
   startPercent,
   endPercent,
@@ -52,8 +70,8 @@ export const isMovedToBarrier = (
   rightBarrierSecond,
   duration
 ) => {
-  const leftPercent = secondToPercent(leftBarrierSecond, duration);
-  const rightPercent = secondToPercent(rightBarrierSecond, duration);
+  const leftPercent = calcPercent(leftBarrierSecond, duration);
+  const rightPercent = calcPercent(rightBarrierSecond, duration);
   if (endPercent < rightPercent && startPercent > leftPercent) {
     return false;
   }

@@ -10,7 +10,7 @@ import PlayerButton from "./PlayerButton";
 import ProgressBar from "./ProgressBar";
 import Timeline from "./Timeline";
 import { useRefHook } from "../../../custom-hooks";
-import { secondToPercent } from "../../../helpers";
+import { calcPercent } from "../../../helpers";
 
 const Player = React.memo((props) => {
   const {
@@ -41,7 +41,7 @@ const Player = React.memo((props) => {
   };
 
   const updateProgressBar = () => {
-    const timePercent = secondToPercent(
+    const timePercent = calcPercent(
       audioPlayer.currentTime,
       audioPlayer.duration
     );

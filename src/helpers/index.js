@@ -18,20 +18,8 @@ export const getElementWidthOnWindow = (parent, clientX) => {
   };
 };
 
-export const pixelToPercent = (child, parent) => {
+export const calcPercent = (child, parent) => {
   return (child * 100) / parent;
-};
-
-export const percentToPixel = (ref) => {
-  return ref.current.clientWidth;
-};
-
-export const calculatePercentBySecond = (second, duration) => {
-  return (second * 100) / duration;
-};
-
-export const secondToPercent = (second, duration) => {
-  return (second * 100) / duration;
 };
 
 export const calculateProgressPercent = (elementStart, elementWidth) => {

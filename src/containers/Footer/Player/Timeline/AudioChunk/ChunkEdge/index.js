@@ -12,7 +12,7 @@ import {
   getRightNeighbourChunk,
 } from "../../../../../../redux/selectors";
 import { getChunkEdgeSeconds } from "../helper";
-import { resizeToLeft, resizeToRight } from "./helper";
+import { resize } from "./helper";
 
 const ChunkEdge = React.memo((props) => {
   const {
@@ -26,22 +26,36 @@ const ChunkEdge = React.memo((props) => {
     leftNeighbourChunk,
     rightNeighbourChunk,
   } = props;
-  const minWidth = 30;
   const sideEdge = useRef(null);
-  const [isResizable, setIsResizable] = useState(false);
+  const [isRight, setIsRight] = useState(false);
   const [neighbourEnd, setNeighbourEnd] = useState(0);
+  const [isResizable, setIsResizable] = useState(false);
+  const [neighbourPoint, setNeighbourPoint] = useState(null);
   const [neighbourStart, setNeighbourStart] = useState(duration);
   const timeline = timelineRef.current;
   const chunk = chunkRef.current;
 
   useEffect(() => {
+    if (side === "left") {
+      setIsRight(false);
+      setNeighbourPoint(neighbourEnd);
+    } else {
+      setIsRight(true);
+      setNeighbourPoint(neighbourStart);
+    }
+  }, [side, neighbourStart, neighbourEnd]);
+
+  useEffect(() => {
     if (leftNeighbourChunk) {
       setNeighbourEnd(leftNeighbourChunk.end);
     }
+  }, [leftNeighbourChunk]);
+
+  useEffect(() => {
     if (rightNeighbourChunk) {
       setNeighbourStart(rightNeighbourChunk.start);
     }
-  }, [leftNeighbourChunk, rightNeighbourChunk]);
+  }, [rightNeighbourChunk]);
 
   const resizeStart = () => {
     setActiveChunkId(audioChunk.id);
@@ -50,11 +64,7 @@ const ChunkEdge = React.memo((props) => {
 
   const resizeMove = (e) => {
     if (isResizable) {
-      if (side === "left") {
-        resizeToLeft(e, neighbourEnd, minWidth, chunk, timeline, duration);
-      } else {
-        resizeToRight(e, neighbourStart, minWidth, chunk, timeline, duration);
-      }
+      resize(e, neighbourPoint, chunk, timeline, duration, isRight);
     }
   };
 

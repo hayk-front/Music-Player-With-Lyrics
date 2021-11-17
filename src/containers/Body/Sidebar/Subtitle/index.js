@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as Styled from "./styled";
-import { TextInput } from "./TextInput";
-import { TimeInput } from "./TimeInput";
+import { TextInput } from "../../../../components/TextInput";
+import { TimeInput } from "../../../../components/TimeInput";
 import {
   getActiveChunkId,
   getAudioDuration,

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Subtitle = styled.div`
   position: relative;
-  min-wdith: 285px;
+  min-width: 285px;
   width: 96%;
   display: flex;
   flex-direction: column;

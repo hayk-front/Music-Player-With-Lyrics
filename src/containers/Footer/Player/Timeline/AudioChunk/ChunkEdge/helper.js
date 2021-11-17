@@ -1,68 +1,41 @@
-import { pixelToPercent, secondToPercent } from "../../../../../../helpers";
-import { getChunkStartEndPercents, getWidth, isReachedLeftBarrier, isReachedToRightBarrier, setWidth } from "../helper";
+import { calcPercent } from "../../../../../../helpers";
+import {
+  getChunkStartEndPercents,
+  getWidth,
+  isReachedToBarrier,
+  setWidth,
+} from "../helper";
 
-export const resizeToLeft = (
+export const resize = (
   e,
-  neighbourEnd,
-  minWidth,
+  neighbourPoint,
   chunk,
   timeline,
-  duration
+  duration,
+  isRight
 ) => {
-  if (getWidth(chunk) < minWidth) {
-    chunk.style.width = minWidth;
-  } else {
-    const movedSize = chunk.offsetLeft + e.movementX;
-    let newWidth = getWidth(chunk);
-    const startEndPercents = getChunkStartEndPercents(
-      movedSize,
-      chunk,
-      timeline
-    );
-    const barrierEnd = secondToPercent(neighbourEnd, duration);
-    const mousePos = pixelToPercent(
-      e.clientX - timeline.offsetLeft,
-      getWidth(timeline)
-    );
-    if (!isReachedLeftBarrier(startEndPercents.start, barrierEnd, mousePos)) {
-      newWidth -= e.movementX;
-      if (newWidth > minWidth) {
-        const leftInPercent = pixelToPercent(movedSize, getWidth(timeline));
-        chunk.style.left = `${leftInPercent}%`;
-      }
-      const widthInPercent = pixelToPercent(newWidth, getWidth(timeline));
-      setWidth(chunk, widthInPercent);
-    }
-  }
-};
-
-export const resizeToRight = (
-  e,
-  neighbourStart,
-  minWidth,
-  chunk,
-  timeline,
-  duration
-) => {
-  const mousePos = pixelToPercent(
+  const minPixelWidth = 30;
+  const mousePos = calcPercent(
     e.clientX - timeline.offsetLeft,
     getWidth(timeline)
   );
+  const movedPixels = chunk.offsetLeft + e.movementX;
+  let newWidth = getWidth(chunk);
   const startEndPercents = getChunkStartEndPercents(
-    chunk.offsetLeft + e.movementX,
+    movedPixels,
     chunk,
     timeline
   );
-  if (getWidth(chunk) >= minWidth) {
-    const barrierStart = secondToPercent(neighbourStart, duration);
-    if (
-      !isReachedToRightBarrier(startEndPercents.end, barrierStart, mousePos)
-    ) {
-      const widthInPercent = pixelToPercent(
-        getWidth(chunk) + e.movementX,
-        getWidth(timeline)
-      );
+  if (newWidth >= minPixelWidth) {
+    const barrier = calcPercent(neighbourPoint, duration);
+    if (!isReachedToBarrier(startEndPercents, barrier, mousePos, isRight)) {
+      isRight ? (newWidth += e.movementX) : (newWidth -= e.movementX);
+      const widthInPercent = calcPercent(newWidth, getWidth(timeline));
       setWidth(chunk, widthInPercent);
+      if (!isRight && newWidth > minPixelWidth) {
+        const leftInPercent = calcPercent(movedPixels, getWidth(timeline));
+        chunk.style.left = `${leftInPercent}%`;
+      }
     }
   }
 };

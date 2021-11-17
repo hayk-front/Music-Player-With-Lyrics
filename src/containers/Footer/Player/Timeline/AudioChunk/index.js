@@ -15,14 +15,12 @@ import {
   setShowLyrics,
   setActiveChunkId,
 } from "../../../../../redux/actions/action";
-import {
-  calculatePercentBySecond,
-  percentToPixel,
-} from "../../../../../helpers";
+import { calcPercent } from "../../../../../helpers";
 import { useEventListener } from "../../../../../custom-hooks/useEventListener";
 import {
   getChunkEdgeSeconds,
   getChunkStartEndPercents,
+  getWidth,
   isMovedToBarrier,
 } from "./helper";
 import ChunkEdge from "./ChunkEdge";
@@ -39,16 +37,17 @@ const AudioChunk = React.memo((props) => {
     leftNeighbourChunk,
     rightNeighbourChunk,
   } = props;
-  const chunk = useRef(null);
+  const chunkRef = useRef(null);
   const { start, end } = audioChunk;
-  const startPercent = calculatePercentBySecond(start, audioDuration);
-  const endPercent = calculatePercentBySecond(end, audioDuration);
+  const startPercent = calcPercent(start, audioDuration);
+  const endPercent = calcPercent(end, audioDuration);
   const [chunkSizeInPercent, setChunkSizeInPercent] = useState(
     endPercent - startPercent
   );
   const [isMovable, setIsMovable] = useState(false);
   const [prevChunkEnd, setPrevEnd] = useState(0);
   const [nextChunkStart, setNextStart] = useState(audioDuration);
+  const chunk = chunkRef.current;
 
   useEffect(() => {
     leftNeighbourChunk && setPrevEnd(leftNeighbourChunk.end);
@@ -56,15 +55,15 @@ const AudioChunk = React.memo((props) => {
   }, [activeChunkId, leftNeighbourChunk, rightNeighbourChunk]);
 
   useLayoutEffect(() => {
-    setWidthInPixels(percentToPixel(chunk));
+    if (chunk) setWidthInPixels(getWidth(chunk));
   }, [chunk, setWidthInPixels]);
 
   const movingChunk = (e) => {
-    if (isMovable && chunk.current) {
-      const movedSize = chunk.current.offsetLeft + e.movementX;
+    if (isMovable && chunk) {
+      const movedSize = chunk.offsetLeft + e.movementX;
       const startEndPercents = getChunkStartEndPercents(
         movedSize,
-        chunk.current,
+        chunk,
         timeline.current
       );
       if (
@@ -77,12 +76,12 @@ const AudioChunk = React.memo((props) => {
           null
         )
       )
-        chunk.current.style.left = `${startEndPercents.start}%`;
+        chunk.style.left = `${startEndPercents.start}%`;
     }
   };
 
   const dragStart = (e) => {
-    if (e.target !== chunk.current) return;
+    if (e.target !== chunk) return;
     setIsMovable(true);
     setActiveChunkId(audioChunk.id);
   };
@@ -94,16 +93,16 @@ const AudioChunk = React.memo((props) => {
   const dragFinish = () => {
     setIsMovable(false);
     const edgeSeconds = getChunkEdgeSeconds(
-      chunk.current,
+      chunk,
       timeline.current,
       audioDuration
     );
     setChunkTimes({
       start: edgeSeconds.startSecond,
-      end: edgeSeconds.endSecond
-    })
+      end: edgeSeconds.endSecond,
+    });
   };
-  useEventListener("mousedown", (e) => dragStart(e), chunk.current);
+  useEventListener("mousedown", (e) => dragStart(e), chunk);
   useEventListener("mousemove", (e) => {
     if (isMovable) dragMove(e);
   });
@@ -112,19 +111,19 @@ const AudioChunk = React.memo((props) => {
   });
 
   return (
-    <Styled.Chunk width={chunkSizeInPercent} left={startPercent} ref={chunk}>
-      <ChunkEdge 
+    <Styled.Chunk width={chunkSizeInPercent} left={startPercent} ref={chunkRef}>
+      <ChunkEdge
         audioChunk={audioChunk}
-        chunkRef={chunk}
+        chunkRef={chunkRef}
         timelineRef={timeline}
         side="left"
         startPercent={startPercent}
         endPercent={endPercent}
         setChunkSizeInPercent={setChunkSizeInPercent}
       />
-      <ChunkEdge 
+      <ChunkEdge
         audioChunk={audioChunk}
-        chunkRef={chunk}
+        chunkRef={chunkRef}
         timelineRef={timeline}
         side="right"
         startPercent={startPercent}
@@ -133,7 +132,7 @@ const AudioChunk = React.memo((props) => {
       />
       {/* <LeftEdge
         audioChunk={audioChunk}
-        chunkRef={chunk}
+        chunkRef={chunkRef}
         timelineRef={timeline}
         left={startPercent}
         startPercent={startPercent}
@@ -142,7 +141,7 @@ const AudioChunk = React.memo((props) => {
       />
       <RightEdge
         audioChunk={audioChunk}
-        chunkRef={chunk}
+        chunkRef={chunkRef}
         timelineRef={timeline}
         startPercent={startPercent}
         endPercent={endPercent}

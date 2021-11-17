@@ -11,13 +11,13 @@ import * as Styled from "./styled";
 
 const ProgressBar = (props) => {
   const { audio, progressPercent } = props;
-  const progress = useRef(null);
-  const progressBar = useRef(null);
+  const currProgressElem = useRef(null);
+  const progressBarElem = useRef(null);
 
   const calculateProgress = (event) => {
     const clickedProgressCoordinate = event.clientX;
     const { elementStart, elementWidth } = getElementWidthOnWindow(
-      progressBar.current,
+      progressBarElem.current,
       clickedProgressCoordinate
     );
     const progressPercent = calculateProgressPercent(
@@ -28,7 +28,7 @@ const ProgressBar = (props) => {
   };
 
   const setProgressBarPercent = (percent) => {
-    setProgressPercent(progress, percent);
+    setProgressPercent(currProgressElem, percent);
     setAudioCurrentTime(percent);
   };
 
@@ -37,12 +37,12 @@ const ProgressBar = (props) => {
   };
 
   useEffect(() => {
-    setProgressPercent(progress, progressPercent);
-  }, [progress, progressPercent]);
+    setProgressPercent(currProgressElem, progressPercent);
+  }, [currProgressElem, progressPercent]);
 
   return (
-    <Styled.ProgressBar ref={progressBar} onMouseDown={calculateProgress}>
-      <Styled.ProgressPercent ref={progress} />
+    <Styled.ProgressBar ref={progressBarElem} onMouseDown={calculateProgress}>
+      <Styled.ProgressPercent ref={currProgressElem} />
     </Styled.ProgressBar>
   );
 };
