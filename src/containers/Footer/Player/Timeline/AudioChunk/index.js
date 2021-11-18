@@ -23,7 +23,8 @@ import {
   getWidth,
   isMovedToBarrier,
 } from "./helper";
-import ChunkEdge from "./ChunkEdge";
+import LeftSide from "./LeftSide";
+import RightSide from "./RightSide";
 
 const AudioChunk = React.memo((props) => {
   const {
@@ -41,9 +42,7 @@ const AudioChunk = React.memo((props) => {
   const { start, end } = audioChunk;
   const startPercent = calcPercent(start, audioDuration);
   const endPercent = calcPercent(end, audioDuration);
-  const [chunkSizeInPercent, setChunkSizeInPercent] = useState(
-    endPercent - startPercent
-  );
+  const [chunkSizeInPercent] = useState(endPercent - startPercent);
   const [isMovable, setIsMovable] = useState(false);
   const [prevChunkEnd, setPrevEnd] = useState(0);
   const [nextChunkStart, setNextStart] = useState(audioDuration);
@@ -112,41 +111,16 @@ const AudioChunk = React.memo((props) => {
 
   return (
     <Styled.Chunk width={chunkSizeInPercent} left={startPercent} ref={chunkRef}>
-      <ChunkEdge
+      <LeftSide
         audioChunk={audioChunk}
         chunkRef={chunkRef}
         timelineRef={timeline}
-        side="left"
-        startPercent={startPercent}
-        endPercent={endPercent}
-        setChunkSizeInPercent={setChunkSizeInPercent}
       />
-      <ChunkEdge
+      <RightSide
         audioChunk={audioChunk}
         chunkRef={chunkRef}
         timelineRef={timeline}
-        side="right"
-        startPercent={startPercent}
-        endPercent={endPercent}
-        setChunkSizeInPercent={setChunkSizeInPercent}
       />
-      {/* <LeftEdge
-        audioChunk={audioChunk}
-        chunkRef={chunkRef}
-        timelineRef={timeline}
-        left={startPercent}
-        startPercent={startPercent}
-        endPercent={endPercent}
-        setChunkSizeInPercent={setChunkSizeInPercent}
-      />
-      <RightEdge
-        audioChunk={audioChunk}
-        chunkRef={chunkRef}
-        timelineRef={timeline}
-        startPercent={startPercent}
-        endPercent={endPercent}
-        setChunkSizeInPercent={setChunkSizeInPercent}
-      /> */}
     </Styled.Chunk>
   );
 });

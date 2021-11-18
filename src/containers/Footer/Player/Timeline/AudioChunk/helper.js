@@ -20,27 +20,27 @@ export const getChunkStartEndPercents = (movedSize, chunk, timeline) => {
   return { start, end };
 };
 
-// export const isReachedToRightBarrier = (
-//   endPercent,
-//   barrierPercent,
-//   mousePos
-// ) => {
-//   if (endPercent < barrierPercent && mousePos <= endPercent) {
-//     return false;
-//   }
-//   return true;
-// };
+export const isReachedToRightBarrier = (
+  endPercent,
+  barrierPercent,
+  mousePos
+) => {
+  if (endPercent < barrierPercent && mousePos <= endPercent) {
+    return false;
+  }
+  return true;
+};
 
-// export const isReachedLeftBarrier = (
-//   startPercent,
-//   barrierPercent,
-//   mousePos
-// ) => {
-//   if (startPercent > barrierPercent && mousePos >= startPercent) {
-//     return false;
-//   }
-//   return true;
-// };
+export const isReachedLeftBarrier = (
+  startPercent,
+  barrierPercent,
+  mousePos
+) => {
+  if (startPercent > barrierPercent && mousePos >= startPercent) {
+    return false;
+  }
+  return true;
+};
 
 export const isReachedToBarrier = (
   startEndPercents,
