@@ -69,32 +69,35 @@ const Subtitle = (props) => {
   };
 
   const updateChunkTime = (e, point) => {
-    setActiveChunkId(audioChunk.id);
-    const seconds = validateSeconds(
-      e.target.value,
-      audioChunk.start,
-      point,
-      leftBarrierSec,
-      rightBarrierSec
-    );
-    const validSecondsToMinute = parseSecondsToMinutesFormat(seconds);
-
     if (point === "start") {
       setStartTime(e.target.value);
-      debounced1000(() => {
+    } else {
+      setEndTime(e.target.value);
+    }
+    setActiveChunkId(audioChunk.id);
+
+    debounced1000(() => {
+      const seconds = validateSeconds(
+        e.target.value,
+        audioChunk.start,
+        point,
+        leftBarrierSec,
+        rightBarrierSec
+      );
+
+      const validSecondsToMinute = parseSecondsToMinutesFormat(seconds);
+
+      if (point === "start") {
         setStartTime(validSecondsToMinute);
         setChunkTimes({
           start: seconds,
           end: calcEndSecondByStart(seconds, audioChunk.end),
         });
-      });
-    } else {
-      setEndTime(e.target.value);
-      debounced1000(() => {
+      } else {
         setEndTime(validSecondsToMinute);
         setChunkTimes({ start: null, end: seconds });
-      });
-    }
+      }
+    });
   };
 
   return (

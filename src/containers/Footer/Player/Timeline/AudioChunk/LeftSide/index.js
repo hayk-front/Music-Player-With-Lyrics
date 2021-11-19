@@ -23,8 +23,12 @@ const LeftSide = React.memo((props) => {
   } = props;
   const minWidth = 30;
   const [neighbourEnd, setNeighbourEnd] = useState(0);
+  const [chunk, setChunk] = useState(null);
   const timeline = timelineRef.current;
-  const chunk = chunkRef.current;
+
+  useEffect(() => {
+    chunkRef.current && setChunk(chunkRef.current);
+  }, [chunkRef]);
 
   useEffect(() => {
     if (leftNeighbourChunk) {

@@ -1,14 +1,11 @@
-import {
-  caluclateSecondByPercent,
-  calcPercent,
-} from "../../../../../helpers";
+import { calcSecondByPercent, calcPercent } from "../../../../../helpers";
 
 export const getChunkEdgeSeconds = (chunk, timeline, audioDuration) => {
-  const chunkWidth = calcPercent(chunk.clientWidth, timeline.clientWidth);
-  const startPercent = calcPercent(chunk.offsetLeft, timeline.clientWidth);
-  const startSecond = caluclateSecondByPercent(startPercent, audioDuration);
+  const chunkWidth = calcPercent(getWidth(chunk), getWidth(timeline));
+  const startPercent = calcPercent(chunk.offsetLeft, getWidth(timeline));
+  const startSecond = calcSecondByPercent(startPercent, audioDuration);
   const endPercent = chunkWidth + startPercent;
-  const endSecond = caluclateSecondByPercent(endPercent, audioDuration);
+  const endSecond = calcSecondByPercent(endPercent, audioDuration);
 
   return { startSecond, endSecond };
 };
@@ -40,27 +37,6 @@ export const isReachedLeftBarrier = (
     return false;
   }
   return true;
-};
-
-export const isReachedToBarrier = (
-  startEndPercents,
-  barrierPercent,
-  mousePos,
-  isRight
-) => {
-  if (isRight) {
-    const endPercent = startEndPercents.end;
-    if (endPercent < barrierPercent && mousePos <= endPercent) {
-      return false;
-    }
-    return true;
-  } else {
-    const startPercent = startEndPercents.start;
-    if (startPercent > barrierPercent && mousePos >= startPercent) {
-      return false;
-    }
-    return true;
-  }
 };
 
 export const isMovedToBarrier = (

@@ -4,10 +4,6 @@ import {
   isAllowedToAddChunk,
 } from "./helper";
 
-export const setDuration = (action) => (state, draft) => {
-  draft.duration = action.payload;
-};
-
 export const setActiveChunk = (action) => (state, draft) => {
   draft.activeChunkId = action.payload;
 };

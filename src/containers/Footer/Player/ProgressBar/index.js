@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   calculateProgressPercent,
+  calcSecondByPercent,
   getElementWidthOnWindow,
-  percentToSecond,
 } from "../../../../helpers";
 import { getAudioElement } from "../../../../redux/selectors";
 import { setProgressPercent } from "./helper";
@@ -33,7 +33,7 @@ const ProgressBar = (props) => {
   };
 
   const setAudioCurrentTime = (percent) => {
-    audio.currentTime = percentToSecond(audio.duration, percent);
+    audio.currentTime = calcSecondByPercent(percent, audio.duration);
   };
 
   useEffect(() => {

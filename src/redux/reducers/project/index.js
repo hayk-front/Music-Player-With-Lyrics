@@ -1,6 +1,5 @@
 import { produce } from "immer";
 import {
-  setDuration,
   addChunk,
   removeChunk,
   setActiveChunk,
@@ -39,9 +38,6 @@ const initialState = {
 export const project = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case "SET_AUDIO_DURATION":
-        setDuration(action)(state, draft);
-        break;
       case "SET_ACTIVE_CHUNK_ID":
         setActiveChunk(action)(state, draft);
         break;

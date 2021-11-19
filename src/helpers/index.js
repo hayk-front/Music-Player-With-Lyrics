@@ -2,7 +2,6 @@
 
 export const debounce = (fn, ms) => {
   let timeoutID;
-
   return (...arg) => {
     if (timeoutID) clearTimeout(timeoutID);
     timeoutID = setTimeout(() => fn(...arg), ms);
@@ -22,16 +21,20 @@ export const calcPercent = (child, parent) => {
   return (child * 100) / parent;
 };
 
+export const calcSecondByPercent = (percent, duration) => {
+  return Math.round((percent * duration) / 100);
+};
+
 export const calculateProgressPercent = (elementStart, elementWidth) => {
   return Math.abs(Math.round((elementStart / elementWidth) * 100));
 };
 
-export const caluclateSecondByPercent = (percent, duration) => {
-  return Math.round((percent * duration) / 100);
-};
-
-export const percentToSecond = (duration, percent) => {
-  return Math.floor((Math.floor(duration) * percent) / 100);
+export const calcEndSecondByStart = (startSec, initialEndSec) => {
+  const minSecondRange = 5;
+  if (startSec > initialEndSec - minSecondRange) {
+    return startSec + minSecondRange;
+  }
+  return null;
 };
 
 export const parseSecondsToMinutesFormat = (seconds) => {
@@ -48,14 +51,6 @@ export const parseMinutesFormatToSeconds = (minutesFormat) => {
   return seconds;
 };
 
-export const calcEndSecondByStart = (startSec, initialEndSec) => {
-  const minSecondRange = 5;
-  if (startSec > initialEndSec - minSecondRange) {
-    return startSec + minSecondRange;
-  }
-  return null;
-};
-
 export const validateSeconds = (
   inputSecond,
   startTime,
@@ -63,12 +58,13 @@ export const validateSeconds = (
   leftBarrierSec,
   rightBarrierSec
 ) => {
+  const minRange = 5;
   let second = parseMinutesFormatToSeconds(inputSecond);
   if (point === "start") {
-    if (second > rightBarrierSec) second = rightBarrierSec - 5;
+    if (second > rightBarrierSec) second = rightBarrierSec - minRange;
     if (second < leftBarrierSec) second = leftBarrierSec;
   } else {
-    if (second < startTime) second = startTime + 5;
+    if (second < startTime) second = startTime + minRange;
     if (second > rightBarrierSec) second = rightBarrierSec;
   }
   return second;

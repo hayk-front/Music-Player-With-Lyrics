@@ -71,27 +71,9 @@ export const setIsResizable = (payload) => {
     payload,
   };
 };
-export const setWidthInPercent = (payload) => {
-  return {
-    type: "SET_WIDTH_IN_PERCENT",
-    payload,
-  };
-};
 export const setWidthInPixels = (payload) => {
   return {
     type: "SET_WIDTH_IN_PIXELS",
-    payload,
-  };
-};
-export const setChunksActiveEdge = (payload) => {
-  return {
-    type: "SET_CHUNKS_ACTIVE_EDGE",
-    payload,
-  };
-};
-export const setActiveChunkRef = (payload) => {
-  return {
-    type: "SET_ACTIVE_CHUNK_REF",
     payload,
   };
 };
