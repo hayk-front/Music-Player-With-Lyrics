@@ -5,7 +5,9 @@ import * as Styled from "./styled";
 export const Footer = React.memo(() => {
   return (
     <Styled.Footer>
-      <Player />
+      <Styled.FooterContent>
+        <Player />
+      </Styled.FooterContent>
     </Styled.Footer>
   );
 });

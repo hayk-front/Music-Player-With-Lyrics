@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import { getAudioChunks } from "../../../../redux/selectors";
 import AudioChunk from "./AudioChunk";
 import * as Styled from "./styled";
+import TimeTicks from "./TimeTicks";
 
 const Timeline = React.memo((props) => {
-  const { audioChunks, progressPercent } = props;
+  const { audioChunks, progressPercent, zoom } = props;
   const timeline = useRef(null);
-
   return (
-    <Styled.Timeline ref={timeline}>
+    <Styled.Timeline ref={timeline} zoom={zoom}>
+      <TimeTicks zoom={zoom} />
       {audioChunks.map((audioChunk) => {
         return (
           <AudioChunk

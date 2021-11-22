@@ -2,11 +2,10 @@ import styled from "styled-components";
 
 export const Timeline = styled.div`
   position: relative;
-  width: 98%;
+  width: ${(props) => props.zoom * 100}%;
   height: 60px;
+  margin: 4% auto 1%;
   text-align: center;
   border-radius: 7px;
-  margin: 4% auto 0;
-  background: linear-gradient(#C7D6EF, #E0EBFE, #C7D6EF);
-};
+  background: linear-gradient(#c7d6ef, #e0ebfe, #c7d6ef);
 `;

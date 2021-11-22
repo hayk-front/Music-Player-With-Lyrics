@@ -11,6 +11,8 @@ import ProgressBar from "./ProgressBar";
 import Timeline from "./Timeline";
 import { useRefHook } from "../../../custom-hooks";
 import { calcPercent } from "../../../helpers";
+import * as Styled from "./styled";
+import { Zoom } from "./Timeline/Zoom";
 
 const Player = React.memo((props) => {
   const {
@@ -23,6 +25,7 @@ const Player = React.memo((props) => {
   const [progressPercent, setProgressStatus] = useState(0);
   const [audioElement, setAudio] = useState(null);
   const audioPlayer = useRefHook(audioElement);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     setAudioElement(audioElement);
@@ -55,7 +58,10 @@ const Player = React.memo((props) => {
       <div className="G-flex G-flex-column G-align-center">
         <PlayerButton />
         <ProgressBar progressPercent={progressPercent} />
-        <Timeline progressPercent={progressPercent} />
+        <Styled.TimelineSection>
+          <Timeline progressPercent={progressPercent} zoom={zoom} />
+          <Zoom zoom={zoom} setZoom={setZoom} />
+        </Styled.TimelineSection>
       </div>
     </div>
   );

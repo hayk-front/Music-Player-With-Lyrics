@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ProgressBar = styled.div`
   position: relative;
   cursor: pointer;
-  width: 98%;
+  width: 100%;
   height: 12px;
   margin: 0 auto;
   border-radius: 5px;
