@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { connect } from "react-redux";
+import { TimelineContext } from "../../../../../context/TimelineContext";
 import { getAudioDuration } from "../../../../../redux/selectors";
 import * as Styled from "./styled";
 
 const Zoom = React.memo((props) => {
-  const { zoom, setZoom, duration } = props;
+  const { duration } = props;
+  const { zoom, setZoom } = useContext(TimelineContext);
   const minZoom = 1;
 
   const zoomIn = () => {

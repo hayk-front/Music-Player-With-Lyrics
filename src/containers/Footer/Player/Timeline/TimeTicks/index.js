@@ -1,12 +1,14 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { SmallTick } from "./SmallTick";
 import { BigTick } from "./BigTick";
 import * as Styled from "./styled";
 import { connect } from "react-redux";
 import { getAudioDuration } from "../../../../../redux/selectors";
+import { TimelineContext } from "../../../../../context/TimelineContext";
 
 const TimeTicks = React.memo((props) => {
-  const { duration, zoom } = props;
+  const { duration } = props;
+  const { zoom } = useContext(TimelineContext);
   const splitCount = 10 * zoom;
   const percent = duration > splitCount ? splitCount : duration;
   const [splitted, setSplitted] = useState(null);
