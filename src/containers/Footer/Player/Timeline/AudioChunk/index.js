@@ -16,7 +16,7 @@ import {
   setActiveChunkId,
 } from "../../../../../redux/actions/action";
 import { calcPercent } from "../../../../../helpers";
-import { useEventListener } from "../../../../../custom-hooks/useEventListener";
+import { useEventListener } from "../../../../../custom-hooks/";
 import {
   getChunkEdgeSeconds,
   getChunkStartEndPercents,

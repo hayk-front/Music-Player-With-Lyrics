@@ -20,8 +20,12 @@ export const getAudioChunks = createSelector(
 
 export const getActiveChunk = createSelector(
   [getProject, getAudioChunks],
-  (project, audioChunks) => {
-    return audioChunks.find((chunk) => chunk.id === project.activeChunkId);
+  (project, audioChunks) => { 
+    const blyat = audioChunks.find((chunk) => chunk.id === project.activeChunkId)
+    if(blyat) {
+      return blyat
+    }
+    return audioChunks[0]
   }
 );
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as Styled from "./styled";
 import { TextInput } from "../../../../components/TextInput";
 import { TimeInput } from "../../../../components/TimeInput";
@@ -21,10 +21,10 @@ import {
   parseSecondsToMinutesFormat,
   validateSeconds,
 } from "../../../../helpers";
-const debounced700 = debounce((fn) => fn(), 700);
+import { useOnOutsideClick } from "../../../../custom-hooks/";
 const debounced1000 = debounce((fn) => fn(), 1000);
 
-const Subtitle = (props) => {
+const Subtitle = React.memo((props) => {
   const {
     removeChunk,
     audioChunk,
@@ -36,15 +36,16 @@ const Subtitle = (props) => {
     activeChunkId,
     setActiveChunkId,
   } = props;
+  const subtitle = useRef(null);
+  const [inputValue, setValue] = useState(audioChunk.textParams.text);
+  const [leftBarrierSec, setLeftBarrierSec] = useState(0);
+  const [rightBarrierSec, setRightBarrierSec] = useState(audioDuration);
   const [startTime, setStartTime] = useState(
     parseSecondsToMinutesFormat(audioChunk.start)
   );
   const [endTime, setEndTime] = useState(
     parseSecondsToMinutesFormat(audioChunk.end)
   );
-  const [inputValue, setValue] = useState(audioChunk.textParams.text);
-  const [leftBarrierSec, setLeftBarrierSec] = useState(0);
-  const [rightBarrierSec, setRightBarrierSec] = useState(audioDuration);
 
   useEffect(() => {
     setStartTime(parseSecondsToMinutesFormat(audioChunk.start));
@@ -62,11 +63,11 @@ const Subtitle = (props) => {
   const updateChunkLyrics = (e) => {
     setActiveChunkId(audioChunk.id);
     setValue(e.target.value);
-
-    debounced700(() => {
-      editChunkText(e.target.value);
-    });
   };
+
+  useOnOutsideClick(subtitle.current, () => {
+    if (inputValue !== audioChunk.textParams.text) editChunkText(inputValue);
+  });
 
   const updateChunkTime = (e, point) => {
     if (point === "start") {
@@ -101,7 +102,7 @@ const Subtitle = (props) => {
   };
 
   return (
-    <Styled.Subtitle>
+    <Styled.Subtitle ref={subtitle}>
       <Styled.Icon
         src="./icons/remove.svg"
         alt="remove"
@@ -124,7 +125,7 @@ const Subtitle = (props) => {
       </Styled.TimeInputSection>
     </Styled.Subtitle>
   );
-};
+});
 
 const mapStateToProps = (state) => ({
   audioDuration: getAudioDuration(state),

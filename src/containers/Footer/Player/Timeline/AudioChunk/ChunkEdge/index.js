@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useEventListener } from "../../../../../../custom-hooks/useEventListener";
+import { useEventListener } from "../../../../../../custom-hooks";
 import * as Styled from "./styled";
 import {
   setChunkTimes,
