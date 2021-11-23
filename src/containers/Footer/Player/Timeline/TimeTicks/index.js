@@ -13,13 +13,13 @@ const TimeTicks = React.memo((props) => {
 
   useEffect(() => {
     const splitArray = [];
-    const step = Math.ceil(duration / percent);
+    const step = Math.round(duration / percent);
     // need to be refactored !
     for (let i = 0; i < percent; i++) {
       splitArray.push(step * i);
     }
     return setSplitted(splitArray);
-  }, [duration, zoom]);
+  }, [duration, zoom, percent]);
 
   return (
     <Styled.TimeTicks>

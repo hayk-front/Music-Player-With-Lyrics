@@ -12,7 +12,7 @@ import Timeline from "./Timeline";
 import { useRefHook } from "../../../custom-hooks";
 import { calcPercent } from "../../../helpers";
 import * as Styled from "./styled";
-import { Zoom } from "./Timeline/Zoom";
+import Zoom from "./Timeline/Zoom";
 
 const Player = React.memo((props) => {
   const {
