@@ -4,14 +4,14 @@ import Lyrics from "./Lyrics";
 import { connect } from "react-redux";
 import { getShowLyrics } from "../../../redux/selectors";
 
-const Screen = (props) => {
+const Screen = React.memo((props) => {
   const { showLyrics } = props;
   return (
     <Styled.Screen>
       { showLyrics && <Lyrics /> }
     </Styled.Screen>
   );
-};
+});
 
 const mapStateToProps = (state) => ({
   showLyrics: getShowLyrics(state),

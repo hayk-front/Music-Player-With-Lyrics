@@ -1,7 +1,7 @@
 import React from "react";
 import * as Styled from "./styled";
 
-export const TextInput = (props) => {
+export const TextInput = React.memo((props) => {
   const { text, updateChunkLyrics } = props;
 
   return (
@@ -13,4 +13,4 @@ export const TextInput = (props) => {
       ></Styled.Input>
     </Styled.Label>
   );
-};
+});

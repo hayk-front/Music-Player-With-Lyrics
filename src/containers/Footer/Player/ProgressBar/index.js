@@ -9,7 +9,7 @@ import { getAudioElement } from "../../../../redux/selectors";
 import { setProgressPercent } from "./helper";
 import * as Styled from "./styled";
 
-const ProgressBar = (props) => {
+const ProgressBar = React.memo((props) => {
   const { audio, progressPercent } = props;
   const currProgressElem = useRef(null);
   const progressBarElem = useRef(null);
@@ -45,7 +45,7 @@ const ProgressBar = (props) => {
       <Styled.ProgressPercent ref={currProgressElem} />
     </Styled.ProgressBar>
   );
-};
+});
 
 const mapStateToProps = (state) => ({
   audio: getAudioElement(state),

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { addChunk } from "../../redux/actions/action";
 import * as Styled from "./styled";
 
-const Sidebar = (props) => {
+const Sidebar = React.memo((props) => {
   const { addChunk } = props;
   return (
     <Styled.Button onClick={addChunk}>
@@ -11,6 +11,6 @@ const Sidebar = (props) => {
       Add Chunk
     </Styled.Button>
   );
-};
+});
 
 export default connect(null, { addChunk })(Sidebar);

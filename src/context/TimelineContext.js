@@ -3,7 +3,7 @@ import { createContext } from "react";
 
 export const TimelineContext = createContext(null);
 
-export const TimelineProvider = (props) => {
+export const TimelineProvider = React.memo((props) => {
   const [zoom, setZoom] = useState(1);
 
   return (
@@ -16,4 +16,4 @@ export const TimelineProvider = (props) => {
       {props.children}
     </TimelineContext.Provider>
   );
-};
+});

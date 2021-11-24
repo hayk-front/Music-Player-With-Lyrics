@@ -1,7 +1,7 @@
 import React from "react";
 import * as Styled from "./styled";
 
-export const TimeInput = (props) => {
+export const TimeInput = React.memo((props) => {
   const { time, point, updateChunkTime } = props;
 
   return (
@@ -12,4 +12,4 @@ export const TimeInput = (props) => {
       </label>
     </Styled.TimeSection>
   );
-};
+});
