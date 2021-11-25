@@ -3,8 +3,6 @@ import * as Styled from "./styled";
 import { TextInput } from "../../../../components/TextInput";
 import { TimeInput } from "../../../../components/TimeInput";
 import {
-  getActiveChunkId,
-  getAudioDuration,
   getLeftBarrier,
   getRightBarrier,
 } from "../../../../redux/selectors";

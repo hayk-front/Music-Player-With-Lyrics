@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
   getAudioDuration,
@@ -14,23 +14,10 @@ import { calcPercent } from "../../../../../../helpers";
 import Edge from "../Edge";
 
 const RightEdge = React.memo((props) => {
-  const {
-    chunkRef,
-    chunkID,
-    timelineRef,
-    audioDuration,
-    rightBarrier,
-  } = props;
+  const { chunkRef, chunkID, timelineRef, audioDuration, rightBarrier } = props;
   const minWidth = 30;
-  const [neighbourStart, setNeighbourStart] = useState(audioDuration);
   const chunk = chunkRef.current;
   const timeline = timelineRef.current;
-
-  useEffect(() => {
-    if (rightBarrier) {
-      setNeighbourStart(rightBarrier);
-    }
-  }, [rightBarrier]);
 
   const resizeToRight = (e) => {
     const mousePos = calcPercent(
@@ -43,7 +30,7 @@ const RightEdge = React.memo((props) => {
       timeline
     );
     if (getWidth(chunk) >= minWidth) {
-      const barrierStart = calcPercent(neighbourStart, audioDuration);
+      const barrierStart = calcPercent(rightBarrier, audioDuration);
       if (
         !isReachedToRightBarrier(startEndPercents.end, barrierStart, mousePos)
       ) {

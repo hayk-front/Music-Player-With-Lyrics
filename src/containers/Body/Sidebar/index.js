@@ -1,18 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import {
-  getActiveChunkEndPoint,
-  getActiveChunkId,
-  getActiveChunkStartPoint,
   getAudioChunks,
-  getLyrics,
 } from "../../../redux/selectors";
 import AddButton from "../../../components/AddButton";
 import * as Styled from "./styled";
 import Subtitle from "./Subtitle";
 
 const Sidebar = React.memo((props) => {
-  const { audioChunks, id, start, end, lyrics } = props;
+  const { audioChunks } = props;
   const sidebar = useRef(null);
 
   useEffect(() => {
@@ -42,10 +38,6 @@ const Sidebar = React.memo((props) => {
 
 const mapStateToProps = (state) => ({
   audioChunks: getAudioChunks(state),
-  id: getActiveChunkId(state),
-  start: getActiveChunkStartPoint(state),
-  end: getActiveChunkEndPoint(state),
-  lyrics: getLyrics(state),
 });
 
 export default connect(mapStateToProps)(Sidebar);

@@ -31,9 +31,7 @@ const Edge = React.memo((props) => {
   };
 
   const resizeMove = (e) => {
-    if (isResizable) {
-      resize(e);
-    }
+    if (isResizable) resize(e);
   };
 
   const resizeFinish = () => {

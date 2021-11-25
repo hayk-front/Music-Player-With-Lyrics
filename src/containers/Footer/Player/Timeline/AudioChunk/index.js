@@ -1,9 +1,8 @@
-import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import * as Styled from "./styled";
 import { connect } from "react-redux";
 import {
   getAudioDuration,
-  getActiveChunkId,
   getLeftBarrier,
   getRightBarrier,
   getWidthInPixels,
@@ -35,7 +34,6 @@ const AudioChunk = React.memo((props) => {
     audioDuration,
     setWidthInPixels,
     setChunkTimes,
-    activeChunkId,
     setActiveChunkId,
     leftBarrier,
     rightBarrier,
@@ -45,14 +43,7 @@ const AudioChunk = React.memo((props) => {
   const endPercent = calcPercent(end, audioDuration);
   const [chunkSizeInPercent] = useState(endPercent - startPercent);
   const [isMovable, setIsMovable] = useState(false);
-  const [prevChunkEnd, setPrevEnd] = useState(0);
-  const [nextChunkStart, setNextStart] = useState(audioDuration);
   const chunk = chunkRef.current;
-
-  useEffect(() => {
-    leftBarrier && setPrevEnd(leftBarrier);
-    rightBarrier && setNextStart(rightBarrier);
-  }, [activeChunkId, leftBarrier, rightBarrier]);
 
   useLayoutEffect(() => {
     if (chunk) setWidthInPixels(getWidth(chunk));
@@ -70,8 +61,8 @@ const AudioChunk = React.memo((props) => {
         !isMovedToBarrier(
           startEndPercents.start,
           startEndPercents.end,
-          prevChunkEnd,
-          nextChunkStart,
+          leftBarrier,
+          rightBarrier,
           audioDuration,
           null
         )
@@ -121,7 +112,6 @@ const AudioChunk = React.memo((props) => {
 const mapStateToProps = (state) => ({
   audioDuration: getAudioDuration(state),
   widthInPixels: getWidthInPixels(state),
-  activeChunkId: getActiveChunkId(state),
   leftBarrier: getLeftBarrier(state),
   rightBarrier: getRightBarrier(state),
 });

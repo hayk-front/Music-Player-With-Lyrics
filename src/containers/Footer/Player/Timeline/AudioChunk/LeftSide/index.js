@@ -14,27 +14,14 @@ import { calcPercent } from "../../../../../../helpers";
 import Edge from "../Edge";
 
 const LeftSide = React.memo((props) => {
-  const {
-    chunkRef,
-    chunkID,
-    timelineRef,
-    audioDuration,
-    leftBarrier,
-  } = props;
+  const { chunkRef, chunkID, timelineRef, audioDuration, leftBarrier } = props;
   const minWidth = 30;
-  const [neighbourEnd, setNeighbourEnd] = useState(0);
   const [chunk, setChunk] = useState(null);
   const timeline = timelineRef.current;
 
   useEffect(() => {
     chunkRef.current && setChunk(chunkRef.current);
   }, [chunkRef]);
-
-  useEffect(() => {
-    if (leftBarrier) {
-      setNeighbourEnd(leftBarrier);
-    }
-  }, [leftBarrier]);
 
   const resizeToLeft = (e) => {
     const movedSize = chunk.offsetLeft + e.movementX;
@@ -44,7 +31,7 @@ const LeftSide = React.memo((props) => {
       chunk,
       timeline
     );
-    const barrierEnd = calcPercent(neighbourEnd, audioDuration);
+    const barrierEnd = calcPercent(leftBarrier, audioDuration);
     const mousePos = calcPercent(
       e.clientX - timeline.offsetLeft,
       getWidth(timeline)
