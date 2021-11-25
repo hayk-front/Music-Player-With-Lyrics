@@ -7,8 +7,8 @@ import * as Styled from "./styled";
 import TimeTicks from "./TimeTicks";
 
 const Timeline = React.memo((props) => {
-  const { audioChunks, progressPercent } = props;
-  const {zoom} = useContext(TimelineContext)
+  const { audioChunks } = props;
+  const { zoom } = useContext(TimelineContext);
   const timeline = useRef(null);
   return (
     <Styled.Timeline ref={timeline} zoom={zoom}>
@@ -16,8 +16,9 @@ const Timeline = React.memo((props) => {
       {audioChunks.map((audioChunk) => {
         return (
           <AudioChunk
-            progressPercent={progressPercent}
-            audioChunk={audioChunk}
+            id={audioChunk.id}
+            start={audioChunk.start}
+            end={audioChunk.end}
             timeline={timeline}
             key={audioChunk.id}
           />

@@ -20,34 +20,42 @@ export const getAudioChunks = createSelector(
 
 export const getActiveChunk = createSelector(
   [getProject, getAudioChunks],
-  (project, audioChunks) => { 
-    const blyat = audioChunks.find((chunk) => chunk.id === project.activeChunkId)
-    if(blyat) {
-      return blyat
+  (project, audioChunks) => {
+    const blyat = audioChunks.find(
+      (chunk) => chunk.id === project.activeChunkId
+    );
+    if (blyat) {
+      return blyat;
     }
-    return audioChunks[0]
+    return audioChunks[0];
   }
 );
 
-export const getLeftNeighbourChunk = createSelector(
+export const getLeftBarrier = createSelector(
   // TODO: handle error WHEN DELETING A MIDDLE CHUNK
   [getProject, getAudioChunks],
   (project, audioChunks) => {
-    if (project.activeChunkId === audioChunks[0].id) {
-      return { end: 0 };
+    const leftChunk = audioChunks.find(
+      (chunk) => chunk.id === project.activeChunkId - 1
+    );
+    if (leftChunk) {
+      return leftChunk.end;
     }
-    return audioChunks.find((chunk) => chunk.id === project.activeChunkId - 1);
+    return 0;
   }
 );
 
-export const getRightNeighbourChunk = createSelector(
+export const getRightBarrier = createSelector(
   // TODO: handle error WHEN DELETING A MIDDLE CHUNK
   [getProject, getAudioChunks],
   (project, audioChunks) => {
-    if (project.activeChunkId === audioChunks[audioChunks.length - 1].id) {
-      return { start: project.duration };
+    const rightChunk = audioChunks.find(
+      (chunk) => chunk.id === project.activeChunkId + 1
+    );
+    if (rightChunk) {
+      return rightChunk.start;
     }
-    return audioChunks.find((chunk) => chunk.id === project.activeChunkId + 1);
+    return project.duration;
   }
 );
 
@@ -66,14 +74,15 @@ export const getActiveChunkEndPoint = createSelector(
   (audioChunk) => audioChunk.end
 );
 
+export const getLyrics = createSelector(
+  getActiveChunk,
+  (audioChunk) => audioChunk.textParams.text
+);
+
 export const getLyricsCoordinate = createSelector(
   getActiveChunk,
   (audioChunk) => audioChunk.textParams.coordinate
 );
-
-
-
-
 
 // GLOBALS _________________________________________
 export const getGlobals = (state) => {
@@ -118,5 +127,3 @@ export const getAudioElement = createSelector(
   getGlobals,
   (globals) => globals.audio
 );
-
-

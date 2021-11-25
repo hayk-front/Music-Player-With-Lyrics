@@ -60,7 +60,7 @@ const Player = React.memo((props) => {
         <ProgressBar progressPercent={progressPercent} />
         <Styled.TimelineSection>
           <TimelineProvider>
-            <Timeline progressPercent={progressPercent} />
+            <Timeline />
             <Zoom />
           </TimelineProvider>
         </Styled.TimelineSection>

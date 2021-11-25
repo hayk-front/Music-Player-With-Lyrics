@@ -13,7 +13,7 @@ const Edge = React.memo((props) => {
   const {
     side,
     resize,
-    audioChunk,
+    chunkID,
     chunkRef,
     timelineRef,
     duration,
@@ -26,7 +26,7 @@ const Edge = React.memo((props) => {
   const chunk = chunkRef.current;
 
   const resizeStart = () => {
-    setActiveChunkId(audioChunk.id);
+    setActiveChunkId(chunkID);
     setIsResizable(true);
   };
 

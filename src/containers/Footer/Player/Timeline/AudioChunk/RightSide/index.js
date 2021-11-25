@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   getAudioDuration,
-  getRightNeighbourChunk,
+  getRightBarrier,
 } from "../../../../../../redux/selectors";
 import {
   getChunkStartEndPercents,
@@ -16,10 +16,10 @@ import Edge from "../Edge";
 const RightEdge = React.memo((props) => {
   const {
     chunkRef,
-    audioChunk,
+    chunkID,
     timelineRef,
     audioDuration,
-    rightNeighbourChunk,
+    rightBarrier,
   } = props;
   const minWidth = 30;
   const [neighbourStart, setNeighbourStart] = useState(audioDuration);
@@ -27,10 +27,10 @@ const RightEdge = React.memo((props) => {
   const timeline = timelineRef.current;
 
   useEffect(() => {
-    if (rightNeighbourChunk) {
-      setNeighbourStart(rightNeighbourChunk.start);
+    if (rightBarrier) {
+      setNeighbourStart(rightBarrier);
     }
-  }, [rightNeighbourChunk]);
+  }, [rightBarrier]);
 
   const resizeToRight = (e) => {
     const mousePos = calcPercent(
@@ -60,7 +60,7 @@ const RightEdge = React.memo((props) => {
     <Edge
       resize={resizeToRight}
       side={"right"}
-      audioChunk={audioChunk}
+      chunkID={chunkID}
       chunkRef={chunkRef}
       timelineRef={timelineRef}
     ></Edge>
@@ -69,7 +69,7 @@ const RightEdge = React.memo((props) => {
 
 const mapStateToProps = (state) => ({
   audioDuration: getAudioDuration(state),
-  rightNeighbourChunk: getRightNeighbourChunk(state),
+  rightBarrier: getRightBarrier(state),
 });
 
 export default connect(mapStateToProps)(RightEdge);

@@ -5,8 +5,8 @@ import { TimeInput } from "../../../../components/TimeInput";
 import {
   getActiveChunkId,
   getAudioDuration,
-  getLeftNeighbourChunk,
-  getRightNeighbourChunk,
+  getLeftBarrier,
+  getRightBarrier,
 } from "../../../../redux/selectors";
 import { connect } from "react-redux";
 import {
@@ -27,46 +27,38 @@ const debounced1000 = debounce((fn) => fn(), 1000);
 const Subtitle = React.memo((props) => {
   const {
     removeChunk,
-    audioChunk,
-    audioDuration,
+    id,
+    start,
+    end,
+    lyrics,
     setChunkTimes,
     editChunkText,
-    leftChunk,
-    rightChunk,
-    activeChunkId,
+    leftBarrierSec,
+    rightBarrierSec,
     setActiveChunkId,
   } = props;
   const subtitle = useRef(null);
-  const [inputValue, setValue] = useState(audioChunk.textParams.text);
-  const [leftBarrierSec, setLeftBarrierSec] = useState(0);
-  const [rightBarrierSec, setRightBarrierSec] = useState(audioDuration);
+  const [inputValue, setValue] = useState(lyrics);
   const [startTime, setStartTime] = useState(
-    parseSecondsToMinutesFormat(audioChunk.start)
+    parseSecondsToMinutesFormat(start)
   );
-  const [endTime, setEndTime] = useState(
-    parseSecondsToMinutesFormat(audioChunk.end)
-  );
+  const [endTime, setEndTime] = useState(parseSecondsToMinutesFormat(end));
 
   useEffect(() => {
-    setStartTime(parseSecondsToMinutesFormat(audioChunk.start));
-  }, [audioChunk.start]);
+    setStartTime(parseSecondsToMinutesFormat(start));
+  }, [start]);
 
   useEffect(() => {
-    setRightBarrierSec(rightChunk.start);
-    setLeftBarrierSec(leftChunk.end);
-  }, [activeChunkId, rightChunk, leftChunk]);
-
-  useEffect(() => {
-    setEndTime(parseSecondsToMinutesFormat(audioChunk.end));
-  }, [audioChunk.end]);
+    setEndTime(parseSecondsToMinutesFormat(end));
+  }, [end]);
 
   const updateChunkLyrics = (e) => {
-    setActiveChunkId(audioChunk.id);
+    setActiveChunkId(id);
     setValue(e.target.value);
   };
 
   useOnOutsideClick(subtitle.current, () => {
-    if (inputValue !== audioChunk.textParams.text) editChunkText(inputValue);
+    if (inputValue !== lyrics) editChunkText(inputValue);
   });
 
   const updateChunkTime = (e, point) => {
@@ -75,12 +67,12 @@ const Subtitle = React.memo((props) => {
     } else {
       setEndTime(e.target.value);
     }
-    setActiveChunkId(audioChunk.id);
+    setActiveChunkId(id);
 
     debounced1000(() => {
       const seconds = validateSeconds(
         e.target.value,
-        audioChunk.start,
+        start,
         point,
         leftBarrierSec,
         rightBarrierSec
@@ -92,7 +84,7 @@ const Subtitle = React.memo((props) => {
         setStartTime(validSecondsToMinute);
         setChunkTimes({
           start: seconds,
-          end: calcEndSecondByStart(seconds, audioChunk.end),
+          end: calcEndSecondByStart(seconds, end),
         });
       } else {
         setEndTime(validSecondsToMinute);
@@ -106,7 +98,7 @@ const Subtitle = React.memo((props) => {
       <Styled.Icon
         src="./icons/remove.svg"
         alt="remove"
-        onClick={() => removeChunk(audioChunk.id)}
+        onClick={() => removeChunk(id)}
       />
 
       <TextInput text={inputValue} updateChunkLyrics={updateChunkLyrics} />
@@ -128,10 +120,8 @@ const Subtitle = React.memo((props) => {
 });
 
 const mapStateToProps = (state) => ({
-  audioDuration: getAudioDuration(state),
-  activeChunkId: getActiveChunkId(state),
-  leftChunk: getLeftNeighbourChunk(state),
-  rightChunk: getRightNeighbourChunk(state),
+  leftBarrier: getLeftBarrier(state),
+  rightBarrier: getRightBarrier(state),
 });
 
 export default connect(mapStateToProps, {

@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import {
   getAudioDuration,
   getActiveChunkId,
-  getLeftNeighbourChunk,
-  getRightNeighbourChunk,
+  getLeftBarrier,
+  getRightBarrier,
   getWidthInPixels,
 } from "../../../../../redux/selectors";
 
@@ -28,18 +28,19 @@ import RightSide from "./RightSide";
 
 const AudioChunk = React.memo((props) => {
   const {
-    audioChunk,
+    id,
+    start,
+    end,
     timeline,
     audioDuration,
     setWidthInPixels,
     setChunkTimes,
     activeChunkId,
     setActiveChunkId,
-    leftNeighbourChunk,
-    rightNeighbourChunk,
+    leftBarrier,
+    rightBarrier,
   } = props;
   const chunkRef = useRef(null);
-  const { start, end } = audioChunk;
   const startPercent = calcPercent(start, audioDuration);
   const endPercent = calcPercent(end, audioDuration);
   const [chunkSizeInPercent] = useState(endPercent - startPercent);
@@ -49,9 +50,9 @@ const AudioChunk = React.memo((props) => {
   const chunk = chunkRef.current;
 
   useEffect(() => {
-    leftNeighbourChunk && setPrevEnd(leftNeighbourChunk.end);
-    rightNeighbourChunk && setNextStart(rightNeighbourChunk.start);
-  }, [activeChunkId, leftNeighbourChunk, rightNeighbourChunk]);
+    leftBarrier && setPrevEnd(leftBarrier);
+    rightBarrier && setNextStart(rightBarrier);
+  }, [activeChunkId, leftBarrier, rightBarrier]);
 
   useLayoutEffect(() => {
     if (chunk) setWidthInPixels(getWidth(chunk));
@@ -82,7 +83,7 @@ const AudioChunk = React.memo((props) => {
   const dragStart = (e) => {
     if (e.target !== chunk) return;
     setIsMovable(true);
-    setActiveChunkId(audioChunk.id);
+    setActiveChunkId(id);
   };
   const dragMove = (e) => {
     e.preventDefault();
@@ -111,16 +112,8 @@ const AudioChunk = React.memo((props) => {
 
   return (
     <Styled.Chunk width={chunkSizeInPercent} left={startPercent} ref={chunkRef}>
-      <LeftSide
-        audioChunk={audioChunk}
-        chunkRef={chunkRef}
-        timelineRef={timeline}
-      />
-      <RightSide
-        audioChunk={audioChunk}
-        chunkRef={chunkRef}
-        timelineRef={timeline}
-      />
+      <LeftSide chunkID={id} chunkRef={chunkRef} timelineRef={timeline} />
+      <RightSide chunkID={id} chunkRef={chunkRef} timelineRef={timeline} />
     </Styled.Chunk>
   );
 });
@@ -129,8 +122,8 @@ const mapStateToProps = (state) => ({
   audioDuration: getAudioDuration(state),
   widthInPixels: getWidthInPixels(state),
   activeChunkId: getActiveChunkId(state),
-  leftNeighbourChunk: getLeftNeighbourChunk(state),
-  rightNeighbourChunk: getRightNeighbourChunk(state),
+  leftBarrier: getLeftBarrier(state),
+  rightBarrier: getRightBarrier(state),
 });
 
 export default connect(mapStateToProps, {
